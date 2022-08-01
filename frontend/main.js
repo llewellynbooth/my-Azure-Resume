@@ -1,20 +1,22 @@
-window.addEventListener9('DOMContentloaded',(event)=>{
+window.addEventListener('DOMContentloaded', (event) => {
     getVisitCount();
-})
+});
 
-const functiionAPI ='';
+const functionApi = 'http://localhost:7071/api/getResumeFunction';
 
-const getVisitCount = () => {
-    let count =30;
-    fetch(functionAPI).then (response => {
-        return response.json()
-    }).then (response =>{
-        console.log("Website called funcion Api.");
-        count = response.count;
-        document.getElementById("counter").innerText = count;
-    }).catch(function (error){
-        console/log(error);      
-    });
+const getVisitCount = ()=> {
+    let count = 30;
+    fetch(functionApi)
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            console.log("Website called funcion Api.");
+            count = response.count;
+            document.getElementById('counter').innerText = count;
+        }).catch(function (error) {
+            console.log(error);
+        });
     return count;
 }
     

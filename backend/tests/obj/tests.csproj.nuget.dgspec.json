@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\MyResumeProject\\my-Azure-Resume\\backend\\tests\\tests.csproj": {}
+  },
+  "projects": {
+    "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\api.csproj",
+        "projectName": "api",
+        "projectPath": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\Llewellyn\\.nuget\\packages\\",
+        "outputPath": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Llewellyn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.Azure.WebJobs.Extensions.CosmosDB": {
+              "target": "Package",
+              "version": "[3.0.10, )"
+            },
+            "Microsoft.NET.Sdk.Functions": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.421\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\MyResumeProject\\my-Azure-Resume\\backend\\tests\\tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\tests\\tests.csproj",
+        "projectName": "tests",
+        "projectPath": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\tests\\tests.csproj",
+        "packagesPath": "C:\\Users\\Llewellyn\\.nuget\\packages\\",
+        "outputPath": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Llewellyn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\api.csproj": {
+                "projectPath": "C:\\MyResumeProject\\my-Azure-Resume\\backend\\api\\api.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.5.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.421\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
