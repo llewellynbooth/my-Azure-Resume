@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Tulpen One
+- Font Author: Copyright (c) 2011, Naima Ben Ayed (naima.benayed@gmail.com), with Reserved Font Names "Tulpen" and "Tulpen One".
+- Font Source: https://fonts.gstatic.com/s/tulpenone/v25/dFa6ZfeC474skLgesc0CWj0w_HyIRlE.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
