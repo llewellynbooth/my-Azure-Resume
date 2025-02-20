@@ -3788,8 +3788,8 @@ input[type="button"].btn--primary:focus {
 }
 
 .s-about__pic {
-    width: var(--vspace-5);
-    height: var(--vspace-5);
+    width: var(--vspace-10);
+    height: var(--vspace-10);
     border: 1.6rem solid rgba(255, 255, 255, 0.02);
     border-radius: 50%;
 }
