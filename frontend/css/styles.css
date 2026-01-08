@@ -3438,6 +3438,10 @@ input[type="button"].btn--primary:focus {
     position: relative;
 }
 
+/* Hero background image
+ * Photo by John Adams (@johnladams) on Unsplash
+ * https://unsplash.com/photos/1xIN4FMR78A
+ */
 .s-hero__bg {
     display: block;
     position: absolute;
@@ -3447,7 +3451,7 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-image: url(../images/header-bg-3000.jpg);
+    background-image: url(../images/hero-bg-blue-tech.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -3464,7 +3468,7 @@ input[type="button"].btn--primary:focus {
     width: 100%;
     height: 100%;
     background: black;
-    opacity: .5;
+    opacity: .4;
 }
 
 .s-hero__bg::after {
