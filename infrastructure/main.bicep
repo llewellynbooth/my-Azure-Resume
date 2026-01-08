@@ -52,7 +52,7 @@ resource storageAccountWebsite 'Microsoft.Storage/storageAccounts/blobServices@2
   }
 }
 
-// Cosmos DB Account
+// Cosmos DB Account with Free Tier
 resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-11-15' = {
   name: cosmosDbAccountName
   location: location
@@ -69,6 +69,7 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-11-15' = {
     ]
     databaseAccountOfferType: 'Standard'
     enableAutomaticFailover: false
+    enableFreeTier: true  // Enable free tier (1000 RU/s + 25 GB free)
   }
 }
 

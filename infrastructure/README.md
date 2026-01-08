@@ -56,14 +56,16 @@ az deployment group show \
 
 ## Costs
 
-Estimated monthly cost with serverless/consumption tiers:
+Estimated monthly cost with free tiers enabled:
 - Storage Account: ~$0.50/month
-- Azure Functions (Consumption): Free tier (first 1M executions)
-- Cosmos DB: ~$24/month (400 RU/s)
+- Azure Functions (Consumption): **$0/month** (free tier: first 1M executions)
+- Cosmos DB: **$0/month** (free tier: first 1000 RU/s + 25 GB)
 - CDN: ~$0.10/month (low traffic)
-- Application Insights: Free tier (first 5GB)
+- Application Insights: **$0/month** (free tier: first 5GB)
 
-**Total: ~$25/month** (can be reduced to ~$0 with free tiers for low traffic)
+**Total: ~$0.60/month** 🎉
+
+**Note**: Free tier Cosmos DB is limited to one account per Azure subscription.
 
 ## Architecture
 
