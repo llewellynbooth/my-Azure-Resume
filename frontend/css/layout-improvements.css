@@ -1,0 +1,725 @@
+/* ===================================================================
+ * Layout & Formatting Improvements
+ * Enhanced typography, spacing, and visual hierarchy
+ * ------------------------------------------------------------------- */
+
+/* ===================================================================
+ * Typography Enhancements
+ * ------------------------------------------------------------------- */
+
+/* Improve base readability */
+body {
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+}
+
+/* Smooth section transitions */
+section {
+    transition: background-color 0.3s ease;
+}
+
+/* Better heading hierarchy */
+h1 {
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+h2 {
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+h3 {
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+}
+
+h4 {
+    line-height: 1.4;
+    margin-bottom: 1rem;
+}
+
+/* Improve paragraph spacing and readability */
+p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    max-width: 75ch; /* Optimal line length for readability */
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===================================================================
+ * Hero Section Improvements
+ * ------------------------------------------------------------------- */
+
+.s-hero__content-about h1 {
+    margin-bottom: 3rem;
+    font-size: clamp(3.5rem, 5vw, 7rem);
+}
+
+.s-hero__content-about h3 {
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+}
+
+/* Improve visitor counter styling */
+.s-hero__content-about p {
+    font-size: 1.6rem;
+    margin-top: 2rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--color-1, #11ABB0);
+    border-radius: 4px;
+    max-width: max-content;
+}
+
+#counter {
+    font-weight: 700;
+    color: var(--color-1, #11ABB0);
+    font-size: 1.8rem;
+    padding: 0 0.5rem;
+}
+
+/* Improve social icons spacing */
+.s-hero__content-social {
+    margin-top: 3rem;
+}
+
+.s-hero__content-social a {
+    margin-right: 2rem;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.s-hero__content-social a:hover {
+    transform: translateY(-3px);
+}
+
+/* ===================================================================
+ * About Section Improvements
+ * ------------------------------------------------------------------- */
+
+.s-about {
+    padding: 8rem 0;
+}
+
+.s-about__content h3 {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.s-about__content h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 4px;
+    background: var(--color-1, #11ABB0);
+    border-radius: 2px;
+}
+
+.s-about__content p {
+    font-size: 1.7rem;
+    margin-bottom: 2.5rem;
+    color: var(--color-text, #282828);
+}
+
+.s-about__pic {
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact details styling */
+.s-about__content-bottom {
+    margin-top: 4rem;
+    padding-top: 3rem;
+}
+
+.s-about__content-bottom h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.s-about__content-bottom p {
+    font-size: 1.6rem;
+    line-height: 1.8;
+}
+
+/* ===================================================================
+ * Resume Section Improvements
+ * ------------------------------------------------------------------- */
+
+.s-resume {
+    padding: 8rem 0;
+}
+
+.section-header-allcaps {
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-1, #11ABB0);
+    margin-bottom: 2rem;
+}
+
+.resume-block {
+    margin-bottom: 5rem;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.resume-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.resume-block__header {
+    margin-bottom: 2.5rem;
+}
+
+.resume-block__header h4 {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text-dark, #000);
+}
+
+.resume-block__header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1.5rem;
+    color: var(--color-text-light, #828484);
+    margin-bottom: 0;
+}
+
+.resume-block__header-meta span {
+    display: inline-block;
+}
+
+.resume-block__header-date {
+    font-weight: 600;
+    color: var(--color-1, #11ABB0);
+}
+
+/* Improve paragraph spacing in resume */
+.resume-block p {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    max-width: none;
+}
+
+/* Better list formatting */
+.resume-block ul {
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    list-style: none;
+}
+
+.resume-block ul li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.7;
+    font-size: 1.6rem;
+}
+
+.resume-block ul li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--color-1, #11ABB0);
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+/* ===================================================================
+ * Certifications Section Improvements
+ * ------------------------------------------------------------------- */
+
+.s-portfolio {
+    padding: 8rem 0;
+    background: var(--color-gray-1, #eff0f0);
+}
+
+.s-portfolio__header h3 {
+    font-size: 3.5rem;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.folio-list {
+    gap: 3rem;
+}
+
+.folio-item {
+    margin-bottom: 3rem;
+    transition: transform 0.3s ease;
+}
+
+.folio-item:hover {
+    transform: translateY(-5px);
+}
+
+/* ===================================================================
+ * Navigation Improvements
+ * ------------------------------------------------------------------- */
+
+.s-header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.s-header__nav a {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+}
+
+/* Download button improvements */
+.nav-download {
+    margin-left: auto;
+}
+
+.btn--download {
+    padding: 1rem 2rem !important;
+    font-size: 1.4rem !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.btn--download svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.btn--download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Make download button stand out in nav */
+.s-header__nav .nav-download a {
+    background: var(--color-1, #11ABB0);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 6px;
+}
+
+.s-header__nav .nav-download a:hover {
+    background: var(--color-1-light, #15c4c9);
+}
+
+/* ===================================================================
+ * Footer Improvements
+ * ------------------------------------------------------------------- */
+
+.s-footer {
+    padding: 6rem 0 4rem;
+}
+
+.s-footer__social {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.s-footer__social a {
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.s-footer__social a:hover {
+    transform: translateY(-3px);
+}
+
+/* ===================================================================
+ * Scroll Down Arrow Improvements
+ * ------------------------------------------------------------------- */
+
+.s-hero__scroll {
+    margin-top: 5rem;
+}
+
+.s-hero__scroll-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.s-hero__scroll-link:hover {
+    transform: translateY(5px);
+}
+
+.scroll-text {
+    font-size: 1.3rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* ===================================================================
+ * Responsive Improvements
+ * ------------------------------------------------------------------- */
+
+/* Tablet and below */
+@media screen and (max-width: 1024px) {
+    .s-hero__content-about h1 {
+        font-size: clamp(3rem, 5vw, 5rem);
+    }
+
+    .s-hero__content-about h3 {
+        font-size: clamp(1.6rem, 2.5vw, 2rem);
+    }
+
+    .resume-block__header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+    .s-about,
+    .s-resume,
+    .s-portfolio {
+        padding: 6rem 0;
+    }
+
+    .s-about__content h3 {
+        font-size: 2.5rem;
+    }
+
+    .s-portfolio__header h3 {
+        font-size: 3rem;
+    }
+
+    .resume-block {
+        margin-bottom: 4rem;
+        padding-bottom: 3rem;
+    }
+
+    .resume-block__header h4 {
+        font-size: 2rem;
+    }
+
+    .resume-block p,
+    .resume-block ul li {
+        font-size: 1.5rem;
+    }
+
+    .s-hero__content-social a {
+        font-size: 1.8rem;
+        margin-right: 1.5rem;
+    }
+
+    .btn--download {
+        margin-left: 0;
+        margin-top: 2rem;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Small mobile */
+@media screen and (max-width: 480px) {
+    .s-hero__content-about h1 {
+        font-size: 2.8rem;
+    }
+
+    .s-hero__content-about h3 {
+        font-size: 1.5rem;
+    }
+
+    .s-hero__content-about p {
+        font-size: 1.4rem;
+        padding: 1rem 1.5rem;
+    }
+
+    #counter {
+        font-size: 1.6rem;
+    }
+
+    .folio-list {
+        gap: 2rem;
+    }
+
+    .folio-item {
+        margin-bottom: 2rem;
+    }
+}
+
+/* ===================================================================
+ * Dark Mode Adjustments
+ * ------------------------------------------------------------------- */
+
+.dark-mode .s-about__content p {
+    color: var(--color-gray-3, #d0d1d1);
+}
+
+.dark-mode .resume-block {
+    border-bottom-color: var(--color-gray-15, #323333);
+}
+
+.dark-mode .resume-block__header h4 {
+    color: var(--color-white, #ffffff);
+}
+
+.dark-mode .s-hero__content-about p {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .s-about__pic {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ===================================================================
+ * Accessibility Improvements
+ * ------------------------------------------------------------------- */
+
+/* Better focus states */
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--color-1, #11ABB0);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===================================================================
+ * Additional Polish & Visual Effects
+ * ------------------------------------------------------------------- */
+
+/* Subtle fade-in animation for sections */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add subtle hover effects to links */
+a:not(.btn) {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* Improve HR styling */
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--color-border, #e0e0e0) 20%,
+        var(--color-border, #e0e0e0) 80%,
+        transparent
+    );
+    margin: 3rem 0;
+}
+
+.dark-mode hr {
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--color-gray-15, #323333) 20%,
+        var(--color-gray-15, #323333) 80%,
+        transparent
+    );
+}
+
+/* Better spacing for email links */
+a[href^="mailto"] {
+    font-weight: 500;
+    color: var(--color-1, #11ABB0);
+    text-decoration: none;
+}
+
+a[href^="mailto"]:hover {
+    text-decoration: underline;
+}
+
+/* Improve target link highlighting */
+:target {
+    scroll-margin-top: 100px;
+}
+
+/* Better code/monospace styling if needed */
+code,
+pre {
+    font-family: var(--font-mono, Consolas, monospace);
+    background: var(--color-gray-1, #eff0f0);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.dark-mode code,
+.dark-mode pre {
+    background: var(--color-gray-16, #282828);
+}
+
+/* Improve selection styling */
+::selection {
+    background: var(--color-1, #11ABB0);
+    color: white;
+}
+
+::-moz-selection {
+    background: var(--color-1, #11ABB0);
+    color: white;
+}
+
+/* Add subtle shadow to images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Better blockquote styling if used */
+blockquote {
+    border-left: 4px solid var(--color-1, #11ABB0);
+    padding-left: 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--color-text-light, #828484);
+}
+
+/* Improve table readability if tables are added */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+}
+
+table th,
+table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+table th {
+    font-weight: 600;
+    color: var(--color-text-dark, #000);
+    background: var(--color-gray-1, #eff0f0);
+}
+
+.dark-mode table th {
+    background: var(--color-gray-17, #1e1e1e);
+    color: var(--color-white, #fff);
+}
+
+.dark-mode table th,
+.dark-mode table td {
+    border-bottom-color: var(--color-gray-15, #323333);
+}
+
+/* ===================================================================
+ * Print Styles
+ * ------------------------------------------------------------------- */
+
+@media print {
+    .s-header,
+    .s-hero__scroll,
+    .dark-mode-toggle,
+    .ss-go-top {
+        display: none;
+    }
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    .resume-block {
+        page-break-inside: avoid;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+    }
+}
+
+/* ===================================================================
+ * Performance Optimizations
+ * ------------------------------------------------------------------- */
+
+/* GPU acceleration for smooth animations */
+.s-hero__scroll-link,
+.folio-item,
+.btn--download,
+.s-hero__content-social a,
+.s-footer__social a {
+    will-change: transform;
+}
+
+/* Optimize font rendering */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Optimize image rendering */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Reduce motion for accessibility - override animations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        will-change: auto !important;
+    }
+}
