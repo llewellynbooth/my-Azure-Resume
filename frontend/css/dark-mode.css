@@ -85,7 +85,16 @@
 }
 
 .dark-mode .s-hero__bg {
-    opacity: 0.7 !important;
+    background:
+        radial-gradient(ellipse at top left, rgba(17, 171, 176, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(17, 171, 176, 0.08) 0%, transparent 50%),
+        linear-gradient(135deg,
+            #050810 0%,
+            #0a0e1a 25%,
+            #0f1520 50%,
+            #0a0e1a 75%,
+            #050810 100%
+        ) !important;
 }
 
 .dark-mode .s-hero__bg::before {
@@ -93,7 +102,7 @@
 }
 
 .dark-mode .s-hero__bg::after {
-    background: linear-gradient(135deg, rgba(17, 171, 176, 0.1) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.9) 100%) !important;
+    background: radial-gradient(circle at 30% 50%, rgba(17, 171, 176, 0.06) 0%, transparent 25%) !important;
 }
 
 .dark-mode .s-hero__content-about h1 {

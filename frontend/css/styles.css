@@ -3438,9 +3438,9 @@ input[type="button"].btn--primary:focus {
     position: relative;
 }
 
-/* Hero background image
- * Photo by Markus Spiske (@markusspiske) on Unsplash
- * https://unsplash.com/photos/TaKB-4F58ek
+/* Hero background - CSS Gradient
+ * Modern tech-inspired gradient with Azure brand colors
+ * Fast loading, no image needed
  */
 .s-hero__bg {
     display: block;
@@ -3451,9 +3451,17 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-image: url(../images/hero-bg-silhouette.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
+    background:
+        radial-gradient(ellipse at top left, rgba(17, 171, 176, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(17, 171, 176, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg,
+            #0a0e27 0%,
+            #0d1b2a 25%,
+            #1b263b 50%,
+            #0d1b2a 75%,
+            #0a0e27 100%
+        );
+    background-attachment: fixed;
     background-size: cover;
 }
 
@@ -3467,8 +3475,14 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background: black;
-    opacity: .6;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(17, 171, 176, 0.03) 2px,
+        rgba(17, 171, 176, 0.03) 4px
+    );
+    opacity: 1;
 }
 
 .s-hero__bg::after {
@@ -3481,7 +3495,7 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(17, 171, 176, 0.15) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 100%);
+    background: radial-gradient(circle at 30% 50%, rgba(17, 171, 176, 0.08) 0%, transparent 25%);
     opacity: 1;
 }
 
