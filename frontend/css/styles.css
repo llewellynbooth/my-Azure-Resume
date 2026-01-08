@@ -3439,8 +3439,8 @@ input[type="button"].btn--primary:focus {
 }
 
 /* Hero background image
- * Photo by John Adams (@johnladams) on Unsplash
- * https://unsplash.com/photos/1xIN4FMR78A
+ * Photo by Markus Spiske (@markusspiske) on Unsplash
+ * https://unsplash.com/photos/TaKB-4F58ek
  */
 .s-hero__bg {
     display: block;
@@ -3451,7 +3451,7 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-image: url(../images/hero-bg-blue-tech.jpg);
+    background-image: url(../images/hero-bg-silhouette.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
