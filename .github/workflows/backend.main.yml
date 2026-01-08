@@ -1,10 +1,12 @@
 name: deploy_backend
+# deploy when push is made to backend folder.
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-    - 'backend/**'
+    push:
+        branches: [ main ]
+        paths:
+        - 'backend/**'
+    workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -26,7 +28,7 @@ jobs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy to Azure Functions
       uses: Azure/functions-action@v1
@@ -34,6 +36,7 @@ jobs:
         app-name: 'getresumefunctionapp'
         package: './publish'
 
-    - name: Azure Logout
-      run: az logout
+    - name: logout
+      run: |
+            az logout
       if: always()
