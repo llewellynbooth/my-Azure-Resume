@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resumestore100.z8.web.core.windows.net/sitemap.xml
