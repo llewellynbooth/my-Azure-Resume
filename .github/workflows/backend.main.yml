@@ -30,6 +30,13 @@ jobs:
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Update Function App to .NET 8 and v4 runtime
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az functionapp config appsettings set --name getresumefunctionapp --resource-group azureresume-rg --settings "FUNCTIONS_EXTENSION_VERSION=~4"
+          az functionapp config set --name getresumefunctionapp --resource-group azureresume-rg --net-framework-version v8.0
+
     - name: Deploy to Azure Functions
       uses: Azure/functions-action@v1
       with:
