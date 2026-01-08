@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     getVisitCount();
 });
 
-const functionApiUrl = 'https://getresumefunctionapp.azurewebsites.net/api/getResumeFunction';
+const functionApiUrl = 'https://resumefunctionapp-win.azurewebsites.net/api/getResumeFunction';
 const localfunctionApi = 'http://localhost:7071/api/GetResumeFunction';
 
 const getVisitCount = () => {

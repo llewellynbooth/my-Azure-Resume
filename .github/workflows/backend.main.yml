@@ -30,36 +30,11 @@ jobs:
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Set runtime version to v4 for Linux (in-process model)
-      uses: azure/CLI@v1
+    - name: Deploy to Azure Functions (Windows)
+      uses: Azure/functions-action@v1
       with:
-        inlineScript: |
-          az functionapp config appsettings set --name getresumefunctionapp --resource-group azureresume-rg --settings "FUNCTIONS_EXTENSION_VERSION=~4" "FUNCTIONS_WORKER_RUNTIME=dotnet"
-          az functionapp config set --name getresumefunctionapp --resource-group azureresume-rg --linux-fx-version "DOTNET|8.0"
-
-    - name: Stop Function App before deployment
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          az functionapp stop --name getresumefunctionapp --resource-group azureresume-rg
-
-    - name: Create deployment package
-      run: |
-        cd ./publish
-        zip -r ../deploy.zip .
-        cd ..
-
-    - name: Deploy to Azure Functions using zip deploy
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          az functionapp deployment source config-zip --resource-group azureresume-rg --name getresumefunctionapp --src deploy.zip --build-remote false
-
-    - name: Start Function App
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          az functionapp start --name getresumefunctionapp --resource-group azureresume-rg
+        app-name: 'resumefunctionapp-win'
+        package: './publish'
 
     - name: logout
       run: |
