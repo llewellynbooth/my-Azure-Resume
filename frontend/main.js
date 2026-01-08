@@ -1,9 +1,9 @@
 window.addEventListener('DOMContentLoaded', (event) => {
     getVisitCount();
 });
-const functionApiUrl = 'https://getresumefunctionapp.azurewebsites.net/api/getResumeFunction?code=PtIMqehc0n2nh_b3Y1jaNLp13etnryqqfxjQwrkFonGJAzFurcN-0g==';
-const localfunctionApi = 'http://localhost:7071/api/GetResumeFunction';
 
+const functionApiUrl = 'https://getresumefunctionapp.azurewebsites.net/api/getResumeFunction';
+const localfunctionApi = 'http://localhost:7071/api/GetResumeFunction';
 
 const getVisitCount = () => {
     let count = 30;
@@ -18,6 +18,7 @@ const getVisitCount = () => {
         document.getElementById('counter').innerText = count;
     }).catch(function(error) {
         console.log(error);
+        document.getElementById('counter').innerText = 'Error loading count';
       });
     return count;
 }

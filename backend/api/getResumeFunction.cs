@@ -18,8 +18,8 @@ namespace Company.Function
     {
         [FunctionName("getResumeFunction")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            [CosmosDB(databaseName:"CloudResume", collectionName: "Counter",ConnectionStringSetting = "CloudResume",Id = "index", PartitionKey = "index")] Counter counter, 
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [CosmosDB(databaseName:"CloudResume", collectionName: "Counter",ConnectionStringSetting = "CloudResume",Id = "index", PartitionKey = "index")] Counter counter,
             [CosmosDB(databaseName:"CloudResume", collectionName: "Counter",ConnectionStringSetting = "CloudResume",Id = "index", PartitionKey = "index")] out Counter updatedCounter,
              ILogger log)
         {
@@ -28,7 +28,7 @@ namespace Company.Function
             updatedCounter = counter;
             updatedCounter.Count += 1;
 
-            var jsonToReturn = JsonConvert.SerializeObject(counter); 
+            var jsonToReturn = JsonConvert.SerializeObject(updatedCounter); 
             
             return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
 
