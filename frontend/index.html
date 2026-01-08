@@ -39,6 +39,7 @@
     ================================================== -->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
 
     <!-- script
     ================================================== -->
@@ -92,25 +93,27 @@
 
 <body id="top" class="ss-preload">
 
+    <!-- Skip to main content for accessibility -->
+    <a href="#hero" class="skip-link">Skip to main content</a>
 
     <!-- preloader
     ================================================== -->
-    <div id="preloader">
-        <div id="loader"></div>
+    <div id="preloader" aria-hidden="true">
+        <div id="loader" role="status" aria-label="Loading"></div>
     </div>
 
 
     <!-- header
     ================================================== -->
-    <header class="s-header">
+    <header class="s-header" role="banner">
         <div class="row s-header__nav-wrap">
-            <nav class="s-header__nav">
-                <ul>
-                    <li class="current"><a class="smoothscroll" href="#hero">Home</a></li>
-                    <li><a class="smoothscroll" href="#about">About</a></li>
-                    <li><a class="smoothscroll" href="#resume">Resume</a></li>
-                    <li><a class="smoothscroll" href="#portfolio">Certification</a></li>
-                    
+            <nav class="s-header__nav" role="navigation" aria-label="Main navigation">
+                <ul role="menubar">
+                    <li role="none" class="current"><a role="menuitem" class="smoothscroll" href="#hero">Home</a></li>
+                    <li role="none"><a role="menuitem" class="smoothscroll" href="#about">About</a></li>
+                    <li role="none"><a role="menuitem" class="smoothscroll" href="#resume">Resume</a></li>
+                    <li role="none"><a role="menuitem" class="smoothscroll" href="#portfolio">Certification</a></li>
+
                 </ul>
                  <div class="column w-1000-stack">
                         <a href="https://1drv.ms/w/c/38a387b5d46735f6/IQP2NWfUtYejIIA40gAAAAAAAUdLHIie0kQ5iDVtc8II4xU?download=1" class="btn btn--download">
@@ -704,6 +707,11 @@
         </div> <!-- end ss-go-top -->
     </footer>
 
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span aria-hidden="true">🌓</span>
+    </button>
 
     <!-- Java Script
     ================================================== -->
