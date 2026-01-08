@@ -38,13 +38,14 @@ jobs:
           az functionapp config set --name getresumefunctionapp --resource-group azureresume-rg --net-framework-version v8.0
           az functionapp stop --name getresumefunctionapp --resource-group azureresume-rg
 
-    - name: Deploy to Azure Functions
-      uses: Azure/functions-action@v1
+    - name: Deploy to Azure Functions using zip deploy
+      uses: azure/CLI@v1
       with:
-        app-name: 'getresumefunctionapp'
-        package: './publish'
-        scm-do-build-during-deployment: false
-        enable-oryx-build: false
+        inlineScript: |
+          cd ./publish
+          zip -r ../deploy.zip .
+          cd ..
+          az functionapp deployment source config-zip --resource-group azureresume-rg --name getresumefunctionapp --src deploy.zip --build-remote false
 
     - name: Start Function App
       uses: azure/CLI@v1
