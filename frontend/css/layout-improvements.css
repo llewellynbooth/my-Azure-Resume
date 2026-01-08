@@ -130,7 +130,6 @@ p:last-child {
 .s-about__content p {
     font-size: 1.7rem;
     margin-bottom: 2.5rem;
-    color: var(--color-text, #282828);
 }
 
 .s-about__pic {
@@ -190,7 +189,6 @@ p:last-child {
     font-size: 2.4rem;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--color-text-dark, #000);
 }
 
 .resume-block__header-meta {
@@ -473,26 +471,20 @@ p:last-child {
 
 /* ===================================================================
  * Dark Mode Adjustments
+ * Note: Main dark mode styles are in dark-mode.css
+ * These are just layout-specific adjustments
  * ------------------------------------------------------------------- */
 
-.dark-mode .s-about__content p {
-    color: var(--color-gray-3, #d0d1d1);
-}
-
-.dark-mode .resume-block {
-    border-bottom-color: var(--color-gray-15, #323333);
-}
-
-.dark-mode .resume-block__header h4 {
-    color: var(--color-white, #ffffff);
-}
-
-.dark-mode .s-hero__content-about p {
-    background: rgba(0, 0, 0, 0.3);
-}
-
 .dark-mode .s-about__pic {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .folio-item {
+    opacity: 0.95;
+}
+
+.dark-mode .folio-item:hover {
+    opacity: 1;
 }
 
 /* ===================================================================

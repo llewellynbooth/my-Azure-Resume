@@ -51,23 +51,231 @@
     outline-offset: 2px;
 }
 
-/* Apply dark mode to body */
+/* ===================================================================
+ * Comprehensive Dark Mode Styles
+ * ------------------------------------------------------------------- */
+
+/* Apply dark mode to body and main elements */
 .dark-mode body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
 }
 
+/* Header */
 .dark-mode .s-header {
-    background-color: var(--header-bg);
+    background-color: var(--header-bg) !important;
     border-bottom-color: var(--border-color);
 }
 
-.dark-mode a {
-    color: var(--link-color);
+.dark-mode .s-header__nav a {
+    color: var(--text-color) !important;
+}
+
+.dark-mode .s-header__nav a:hover {
+    color: #11ABB0 !important;
+}
+
+.dark-mode .s-header__nav .current a {
+    color: #11ABB0 !important;
+}
+
+/* Hero Section */
+.dark-mode .s-hero {
+    background-color: #0f0f0f !important;
 }
 
 .dark-mode .s-hero__bg {
-    opacity: 0.3;
+    opacity: 0.2 !important;
+}
+
+.dark-mode .s-hero__content-about h1 {
+    color: #ffffff !important;
+}
+
+.dark-mode .s-hero__content-about h3 {
+    color: var(--text-color) !important;
+}
+
+.dark-mode .s-hero__content-about h3 span {
+    color: #11ABB0 !important;
+}
+
+.dark-mode .s-hero__content-about p {
+    color: var(--text-color) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark-mode .scroll-text {
+    color: var(--text-color) !important;
+}
+
+/* About Section */
+.dark-mode .s-about {
+    background-color: #141414 !important;
+}
+
+.dark-mode .s-about__content h3 {
+    color: #ffffff !important;
+}
+
+.dark-mode .s-about__content p {
+    color: var(--text-color) !important;
+}
+
+/* Resume Section */
+.dark-mode .s-resume {
+    background-color: #1a1a1a !important;
+}
+
+.dark-mode .section-header-allcaps {
+    color: #11ABB0 !important;
+}
+
+.dark-mode .resume-block {
+    border-bottom-color: var(--border-color) !important;
+}
+
+.dark-mode .resume-block__header h4 {
+    color: #ffffff !important;
+}
+
+.dark-mode .resume-block__header-meta {
+    color: var(--text-secondary) !important;
+}
+
+.dark-mode .resume-block__header-date {
+    color: #11ABB0 !important;
+}
+
+.dark-mode .resume-block p {
+    color: var(--text-color) !important;
+}
+
+.dark-mode .resume-block ul li {
+    color: var(--text-color) !important;
+}
+
+/* Portfolio/Certifications Section */
+.dark-mode .s-portfolio {
+    background-color: #0f0f0f !important;
+}
+
+.dark-mode .s-portfolio__header h3 {
+    color: #ffffff !important;
+}
+
+/* Footer */
+.dark-mode .s-footer {
+    background-color: #0a0a0a !important;
+    color: var(--text-color) !important;
+}
+
+.dark-mode .s-footer a {
+    color: var(--text-color) !important;
+}
+
+.dark-mode .s-footer a:hover {
+    color: #11ABB0 !important;
+}
+
+/* Links */
+.dark-mode a {
+    color: #4db8ff !important;
+}
+
+.dark-mode a:hover {
+    color: #11ABB0 !important;
+}
+
+.dark-mode .smoothscroll {
+    color: #11ABB0 !important;
+}
+
+/* Buttons - keep their original styling */
+.dark-mode .btn,
+.dark-mode .btn--download {
+    background: #11ABB0 !important;
+    color: #ffffff !important;
+    border-color: #11ABB0 !important;
+}
+
+.dark-mode .btn:hover,
+.dark-mode .btn--download:hover {
+    background: #15c4c9 !important;
+    color: #ffffff !important;
+}
+
+/* General headings */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+    color: #ffffff !important;
+}
+
+/* Paragraphs and text */
+.dark-mode p,
+.dark-mode li,
+.dark-mode span {
+    color: var(--text-color) !important;
+}
+
+/* Special case: keep brand color spans */
+.dark-mode .s-hero__content-about h3 span {
+    color: #11ABB0 !important;
+}
+
+/* Counter styling */
+.dark-mode #counter {
+    color: #11ABB0 !important;
+}
+
+/* HR elements */
+.dark-mode hr {
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--border-color) 20%,
+        var(--border-color) 80%,
+        transparent
+    ) !important;
+}
+
+/* Email and special links */
+.dark-mode a[href^="mailto"] {
+    color: #11ABB0 !important;
+}
+
+/* SVG icons */
+.dark-mode svg {
+    fill: currentColor;
+}
+
+/* Scroll arrow */
+.dark-mode .scroll-arrow svg {
+    fill: var(--text-color) !important;
+}
+
+/* Back to top button */
+.dark-mode .ss-go-top {
+    background-color: var(--header-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .ss-go-top svg {
+    fill: var(--text-color) !important;
+}
+
+/* Mobile menu */
+.dark-mode .s-header__menu-icon {
+    background-color: var(--text-color) !important;
+}
+
+.dark-mode .s-header__menu-icon::before,
+.dark-mode .s-header__menu-icon::after {
+    background-color: var(--text-color) !important;
 }
 
 /* Smooth transitions */
