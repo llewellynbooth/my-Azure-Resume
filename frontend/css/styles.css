@@ -3468,7 +3468,7 @@ input[type="button"].btn--primary:focus {
     width: 100%;
     height: 100%;
     background: black;
-    opacity: .4;
+    opacity: .6;
 }
 
 .s-hero__bg::after {
@@ -3481,8 +3481,8 @@ input[type="button"].btn--primary:focus {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(360deg, black 15%, rgba(0, 0, 0, 0) 100%);
-    opacity: .4;
+    background: linear-gradient(135deg, rgba(17, 171, 176, 0.15) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 100%);
+    opacity: 1;
 }
 
 /* ------------------------------------------------------------------- 

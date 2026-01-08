@@ -85,28 +85,49 @@
 }
 
 .dark-mode .s-hero__bg {
-    opacity: 0.2 !important;
+    opacity: 0.7 !important;
+}
+
+.dark-mode .s-hero__bg::before {
+    opacity: 0.8 !important;
+}
+
+.dark-mode .s-hero__bg::after {
+    background: linear-gradient(135deg, rgba(17, 171, 176, 0.1) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.9) 100%) !important;
 }
 
 .dark-mode .s-hero__content-about h1 {
     color: #ffffff !important;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9) !important;
 }
 
 .dark-mode .s-hero__content-about h3 {
-    color: var(--text-color) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8) !important;
 }
 
 .dark-mode .s-hero__content-about h3 span {
     color: #11ABB0 !important;
+    text-shadow: 0 0 12px rgba(17, 171, 176, 0.6) !important;
 }
 
 .dark-mode .s-hero__content-about p {
-    color: var(--text-color) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
 .dark-mode .scroll-text {
-    color: var(--text-color) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+.dark-mode .s-hero__scroll-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark-mode .s-hero__scroll-link:hover {
+    color: #11ABB0 !important;
 }
 
 /* About Section */
