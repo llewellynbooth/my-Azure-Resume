@@ -30,10 +30,17 @@ jobs:
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Get Function App Name
+      id: get-function-name
+      run: |
+        FUNCTION_APP=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
+        echo "function_app_name=$FUNCTION_APP" >> $GITHUB_OUTPUT
+        echo "Deploying to: $FUNCTION_APP"
+
     - name: Deploy to Azure Functions (Windows)
       uses: Azure/functions-action@v1
       with:
-        app-name: 'resumefunctionapp-win'
+        app-name: ${{ steps.get-function-name.outputs.function_app_name }}
         package: './publish'
 
     - name: logout
