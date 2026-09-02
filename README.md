@@ -33,10 +33,9 @@ flowchart LR
     fn -->|write| messages[("Cosmos DB<br/>CloudResume / Messages")]
     fn -.->|"traces + metrics"| ai["Application Insights"]
 
-    subgraph ci ["GitHub Actions"]
+    subgraph ci ["GitHub Actions (OIDC)"]
       w1["frontend.main.yml"] -.->|"blob upload + CDN purge"| web
-      w2["backend.main.yml"] -.->|"functions deploy"| fn
-      w3["terraform.yml"] -.->|"plan / apply"| state[("Terraform state<br/>Azure Blob")]
+      w2["backend.main.yml"] -.->|"test → deploy"| fn
     end
 ```
 
@@ -56,8 +55,8 @@ dependency calls.
 | API | C# / .NET 8, Azure Functions v4 (isolated worker model, ASP.NET Core integration) |
 | Database | Azure Cosmos DB for NoSQL — free tier, 400 RU/s, `Counter` + `Messages` containers |
 | Monitoring | Application Insights |
-| IaC | Terraform (`azurerm ~> 3.85`), remote state in Azure Blob Storage |
-| CI/CD | GitHub Actions — three path-filtered workflows |
+| IaC | Terraform config present (`azurerm ~> 4.14`) but **not yet reconciled** with the live estate — portal-managed for now, see [`infrastructure/README.md`](infrastructure/README.md) |
+| CI/CD | GitHub Actions — frontend deploy + backend test/deploy, OIDC auth |
 | Tests | xUnit (`backend/tests`) |
 | Region | Australia East |
 
@@ -76,11 +75,10 @@ frontend/         Static site (HTML/CSS/JS, images, SEO files)
 backend/
   api/            Azure Functions project (.NET 8) — Counter, ContactForm, HealthCheck
   tests/          xUnit unit tests
-infrastructure/   Terraform (main.tf), tfvars template, state-backend setup notes
+infrastructure/   Terraform (main.tf) — not yet reconciled with the live estate
 .github/workflows/
   frontend.main.yml   Upload frontend/ to $web, purge CDN
-  backend.main.yml    Build + publish the Functions project, deploy
-  terraform.yml       terraform plan on PR (commented), apply on push to main
+  backend.main.yml    Test on PR; test + build + deploy on push to main
 ```
 
 ## Running locally
@@ -108,15 +106,12 @@ dotnet test backend/tests
 
 ## Infrastructure
 
-Terraform state lives in an Azure Storage container (`tfstateazureresume` /
-`terraform-state-rg`). One-time backend setup and the resource import steps are in
+The running estate (Storage static site, CDN/Front Door, two Function Apps, Cosmos
+`azureresume100`, Application Insights) currently lives in the `Azureresume-rg` resource group
+and is **managed manually in the portal**. `infrastructure/main.tf` is a Terraform description
+of the intended shape but has **not been imported or applied** — resource names differ and
+there is no state backend yet. Reconciling it is a tracked task; see
 [`infrastructure/README.md`](infrastructure/README.md).
-
-```bash
-cd infrastructure
-terraform init
-terraform plan      # apply runs automatically from CI on push to main
-```
 
 ## Cost
 
@@ -131,20 +126,20 @@ terraform plan      # apply runs automatically from CI on push to main
 
 ## Roadmap
 
-**Done** — Functions migrated to the .NET 8 **isolated worker** model; CI/CD on OIDC workload
-identity (no stored secrets); `dotnet test` gate before backend deploy; `azurerm` provider on
-v4; Terraform is the single IaC tool (Bicep retired); contact form hardened (length limits,
-regex email check, honeypot, output encoding); legacy vendored JS and committed build
-artifacts removed.
+**Done** — Functions migrated to the .NET 8 **isolated worker** model; frontend + backend CI/CD
+on OIDC workload identity (no stored secrets); `dotnet test` gate before backend deploy;
+contact form hardened (length limits, regex email check, honeypot, output encoding); legacy
+vendored JS and committed build artifacts removed; Bicep retired.
 
 **Next**, roughly in priority order:
 
-- **Frontend rebuild.** Retire the remaining `plugins.js` bundle and the jQuery-era template.
-- **CDN → Front Door.** Azure CDN Standard from Microsoft (classic) is on a retirement path;
-  move to Azure Front Door Standard.
-- **Custom domain + managed TLS.**
 - **Rotate credentials** — the repo is public; the historical hardcoded API key remains in git
-  history, so rotate the Cosmos key and any old service principal regardless.
+  history, so rotate the Cosmos key and any old service principal.
+- **Reconcile Terraform with the live estate** — rename resources in `main.tf` to match, stand
+  up a state backend, `terraform import`, plan-to-zero, then re-add a CI workflow.
+- **Frontend rebuild.** Retire the remaining `plugins.js` bundle and the jQuery-era template.
+- **CDN → Front Door** (confirm whether the profile is already Front Door) + **custom domain +
+  managed TLS**.
 
 Detailed change history is in [`IMPROVEMENTS.md`](IMPROVEMENTS.md).
 

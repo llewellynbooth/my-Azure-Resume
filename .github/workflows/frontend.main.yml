@@ -38,6 +38,9 @@ jobs:
               --destination '$web' \
               --source frontend/
 
+      # NOTE: if "AzureResumeLlewellyn" is a Front Door profile (not classic CDN),
+      # replace this with:  az afd endpoint purge --profile-name AzureResumeLlewellyn
+      #   --endpoint-name <endpoint> --resource-group Azureresume-rg --domains "*"
       - name: Purge CDN
         uses: azure/cli@v2
         with:
@@ -45,7 +48,7 @@ jobs:
           inlineScript: |
             az cdn endpoint purge \
               --content-paths "/*" \
-              --resource-group azureresume-rg \
+              --resource-group Azureresume-rg \
               --profile-name AzureResumeLlewellyn \
               --name AzureResumeLlewellyn
 

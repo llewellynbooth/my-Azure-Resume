@@ -1,9 +1,13 @@
 name: deploy_backend
-# Tests then deploys the Functions API when files under backend/ change.
+# On PRs: build + test only. On push to main / manual: build, test, deploy.
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.main.yml'
+  pull_request:
     paths:
       - 'backend/**'
       - '.github/workflows/backend.main.yml'
@@ -12,6 +16,12 @@ on:
 permissions:
   id-token: write   # OIDC federated login to Azure
   contents: read
+
+env:
+  RESOURCE_GROUP: Azureresume-rg
+  # The Function App that actually serves the site. There are two apps in the RG;
+  # do not resolve by list index.
+  FUNCTION_APP_PREFIX: resumefunctionapp-win
 
 jobs:
   test:
@@ -28,6 +38,7 @@ jobs:
 
   build-and-deploy:
     needs: test
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +60,9 @@ jobs:
       - name: Resolve Function App name
         id: fn
         run: |
-          name=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
+          name=$(az functionapp list --resource-group "$RESOURCE_GROUP" \
+            --query "[?starts_with(name, '${FUNCTION_APP_PREFIX}')].name | [0]" -o tsv)
+          if [ -z "$name" ]; then echo "No function app matching '${FUNCTION_APP_PREFIX}' in $RESOURCE_GROUP" >&2; exit 1; fi
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "Deploying to: $name"
 

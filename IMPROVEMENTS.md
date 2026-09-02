@@ -16,21 +16,29 @@ Brought the runtime, tooling, and CI up to current practice.
 - **Contact form hardened** (done while rewriting it for isolated): per-field length caps,
   regex email validation, a honeypot field, and `HtmlEncode` on stored values so they are
   inert if ever rendered.
-- **CI/CD → OIDC.** All three workflows now authenticate with GitHub → Azure workload identity
-  federation. Removed `AZURE_CREDENTIALS` and `ARM_CLIENT_SECRET`; secrets are now just
-  `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` / `AZURE_SUBSCRIPTION_ID`. Frontend blob upload uses
-  `--auth-mode login` (Entra) instead of the storage account key.
-- **Test gate.** `backend.main.yml` runs `dotnet test` as a prerequisite job before deploy.
+- **CI/CD → OIDC.** The frontend and backend workflows authenticate with GitHub → Azure
+  workload identity federation. Removed the `AZURE_CREDENTIALS` service-principal secret;
+  secrets are now `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` / `AZURE_SUBSCRIPTION_ID`. Frontend
+  blob upload uses `--auth-mode login` (Entra) instead of the storage account key.
+- **Test on PRs.** `backend.main.yml` runs `dotnet test` on pull requests and gates the deploy
+  job (which only runs on push to `main`).
 - **Action versions.** `checkout@v4`, `azure/login@v2`, `azure/cli@v2`, `setup-dotnet@v4`.
-- **Terraform.** Provider bumped to `azurerm ~> 4.14`, `required_version >= 1.9.0`,
-  `enable_free_tier` → `free_tier_enabled`. Workflow Terraform pinned to 1.9.8.
+- **Deploy targeting fixed.** The backend workflow now resolves the Function App by name prefix
+  (`resumefunctionapp-win`) instead of `az functionapp list [0]` — there are two apps in the
+  resource group and index 0 was the abandoned one. Resource-group casing corrected to
+  `Azureresume-rg`.
 - **Repo hygiene.** Removed 198 committed `bin/` + `obj/` build artifacts (incl. a stale
   `netcoreapp3.1` output), the 8 unreferenced jQuery-era JS files, the empty `UnitTest1.cs`
   placeholder, and the legacy `Microsoft.AspNetCore.Mvc 2.2.0` test dependency.
-- **IaC.** Deleted `infrastructure/main.bicep` and the spent `ENABLE-FREE-TIER.md` runbook
-  (free tier is now set declaratively in `main.tf`); the project is Terraform-only. Both remain
-  in git history.
-- Added the `frontend/404.html` the storage static-website config references.
+- **IaC — status corrected.** The "migrated to Terraform" work from January was never actually
+  imported or applied: `main.tf` resource names do not match the live estate, there is no state
+  backend, and the `production` deployment never went green. Removed the non-functional
+  `terraform.yml` workflow and documented the real state (portal-managed) in
+  `infrastructure/README.md`, with a reconciliation checklist. Kept the `azurerm ~> 4.14` /
+  `free_tier_enabled` edits and the isolated-runtime settings in `main.tf` for when the import
+  happens. Deleted `main.bicep` and the spent `ENABLE-FREE-TIER.md` runbook (both in history).
+- Added `frontend/404.html` (referenced by the static-website config) and `.gitattributes`
+  (LF enforcement so `import-resources.sh` works on Linux CI).
 
 
 ## January 2026 — rework

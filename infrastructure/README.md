@@ -1,9 +1,29 @@
 # Azure Resume - Infrastructure as Code
 
-This directory contains Terraform configuration to deploy the entire Azure Resume infrastructure.
+> ⚠️ **Not reconciled with the live environment.** This Terraform was written but never
+> successfully `import`ed or `apply`ed. Resource names here do not match what is deployed
+> (e.g. Cosmos is `azureresume100`, not `azureresume-cosmos-prod`; the resource group is
+> `Azureresume-rg`), there is no state backend (`terraform-state-rg` does not exist), and the
+> CI workflow that ran this has been removed. The running infrastructure is currently managed
+> by hand in the portal. Treat this directory as a **starting point** for a proper import, not
+> as the source of truth. See "Reconciling with the live estate" below.
 
-> This project originally used Azure Bicep; it was migrated to Terraform. The Bicep template
-> has been removed — it remains in git history if you need to refer back to it.
+This directory contains Terraform configuration intended to manage the Azure Resume
+infrastructure.
+
+> This project originally used Azure Bicep; a migration to Terraform was started. The Bicep
+> template has been removed — it remains in git history if you need to refer back to it.
+
+## Reconciling with the live estate (TODO)
+
+1. Rename every resource in `main.tf` to match the deployed names (check the portal /
+   `az resource list -g Azureresume-rg -o table`).
+2. Create the state backend: `terraform-state-rg` + a storage account + `tfstate` container
+   (see "Create Terraform State Backend" below), ideally with `--allow-shared-key-access false`
+   and AAD auth.
+3. `terraform import` each existing resource, then `terraform plan` until it reports **no
+   changes**.
+4. Only then re-add a CI workflow to run `plan` on PRs and `apply` on merge.
 
 ## Resources Deployed
 
