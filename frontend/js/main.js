@@ -1,383 +1,146 @@
-/* ===================================================================
- * Azure Resume - Visitor Counter & Dark Mode
- * ------------------------------------------------------------------- */
+/* Llewellyn Booth — résumé site
+   Counter, theme toggle, nav, scroll reveal, lazy Credly, contact form. */
 
-// Performance: Load visitor count
-window.addEventListener('DOMContentLoaded', (event) => {
-    getVisitCount();
-    initDarkMode();
+const API = 'https://resumefunctionapp-win-cqczeqc6d5gtdfbb.australiaeast-01.azurewebsites.net/api';
+
+/* ---- theme ---------------------------------------------------------- */
+const themeToggle = document.getElementById('theme-toggle');
+function currentTheme() {
+  return document.documentElement.getAttribute('data-theme')
+    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
+themeToggle?.addEventListener('click', () => {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch { /* private mode */ }
 });
 
-const functionApiUrl = 'https://resumefunctionapp-win-cqczeqc6d5gtdfbb.australiaeast-01.azurewebsites.net/api/getResumeFunction';
-const localfunctionApi = 'http://localhost:7071/api/GetResumeFunction';
-
-const getVisitCount = () => {
-    const counterElement = document.getElementById('counter');
-
-    // Show loading state
-    if (counterElement) {
-        counterElement.innerText = '...';
-        counterElement.setAttribute('aria-live', 'polite');
-    }
-
-    // POST increments the counter; GET is read-only (so prefetchers/scanners don't inflate it).
-    fetch(functionApiUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Website called function API.");
-        const count = data.count || 0;
-        if (counterElement) {
-            counterElement.innerText = count.toLocaleString();
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching visitor count:', error);
-        if (counterElement) {
-            counterElement.innerText = 'N/A';
-            counterElement.title = 'Unable to load visitor count';
-        }
+/* ---- visitor counter (POST increments) ----------------------------- */
+(async () => {
+  const el = document.getElementById('counter');
+  if (!el) return;
+  try {
+    const res = await fetch(`${API}/getResumeFunction`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' }
     });
-};
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    el.textContent = Number(data.count ?? 0).toLocaleString();
+  } catch (err) {
+    console.error('visitor count:', err);
+    el.textContent = 'N/A';
+    el.title = 'Unable to load visitor count';
+  }
+})();
 
-// Dark Mode Toggle
-const initDarkMode = () => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+/* ---- footer year -------------------------------------------------- */
+const yr = document.getElementById('year');
+if (yr) yr.textContent = String(new Date().getFullYear());
 
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.classList.add('dark-mode');
+/* ---- mobile nav ------------------------------------------------- */
+const navToggle = document.querySelector('.nav-toggle');
+const nav = document.getElementById('nav');
+navToggle?.addEventListener('click', () => {
+  const open = nav.classList.toggle('is-open');
+  navToggle.setAttribute('aria-expanded', String(open));
+});
+nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  nav.classList.remove('is-open');
+  navToggle?.setAttribute('aria-expanded', 'false');
+}));
+
+/* ---- active section in nav ------------------------------------- */
+const navLinks = new Map(
+  [...(nav?.querySelectorAll('a[href^="#"]') ?? [])].map(a => [a.getAttribute('href').slice(1), a])
+);
+if (navLinks.size && 'IntersectionObserver' in window) {
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const link = navLinks.get(e.target.id);
+      if (link && e.isIntersecting) {
+        navLinks.forEach(l => l.removeAttribute('aria-current'));
+        link.setAttribute('aria-current', 'true');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach((_, id) => {
+    const sec = document.getElementById(id);
+    if (sec) spy.observe(sec);
+  });
+}
+
+/* ---- reveal on scroll --------------------------------------- */
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+}
+
+/* ---- lazy-load Credly badges ------------------------------- */
+const certGrid = document.querySelector('[data-lazy-credly]');
+if (certGrid) {
+  const loadCredly = () => {
+    if (document.getElementById('credly-embed')) return;
+    const s = document.createElement('script');
+    s.id = 'credly-embed';
+    s.async = true;
+    s.src = 'https://cdn.credly.com/assets/utilities/embed.js';
+    document.body.appendChild(s);
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries, obs) => {
+      if (entries.some(e => e.isIntersecting)) { loadCredly(); obs.disconnect(); }
+    }, { rootMargin: '200px' });
+    io.observe(certGrid);
+  } else {
+    loadCredly();
+  }
+}
+
+/* ---- contact form ----------------------------------------- */
+const form = document.getElementById('contact-form');
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const status = document.getElementById('cf-status');
+  const submit = document.getElementById('cf-submit');
+  const fd = new FormData(form);
+
+  status.className = 'form-status';
+  status.textContent = 'Sending…';
+  submit.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: fd.get('name'),
+        email: fd.get('email'),
+        subject: fd.get('subject'),
+        message: fd.get('message'),
+        website: fd.get('website') // honeypot
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      status.className = 'form-status ok';
+      status.textContent = data.message || 'Thanks — your message has been sent.';
+      form.reset();
+    } else {
+      status.className = 'form-status err';
+      status.textContent = data.error || `Something went wrong (${res.status}).`;
     }
-};
-
-const toggleDarkMode = () => {
-    const isDark = document.documentElement.classList.toggle('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-};
-
-/* ===================================================================
- * Ceevee 2.0.0 - Main JS
- *
- * ------------------------------------------------------------------- */
-
-(function(html) {
-
-    "use strict";
-
-    html.className = html.className.replace(/\bno-js\b/g, '') + ' js ';
-
-
-   /* Preloader
-    * -------------------------------------------------- */
-    const ssPreloader = function() {
-
-        const preloader = document.querySelector('#preloader');
-        if (!preloader) return;
-
-        window.addEventListener('load', function() {
-            
-            document.querySelector('body').classList.remove('ss-preload');
-            document.querySelector('body').classList.add('ss-loaded');
-
-            preloader.addEventListener('transitionend', function(e) {
-                if (e.target.matches("#preloader")) {
-                    this.style.display = 'none';
-                }
-            });
-
-        });
-
-        // force page scroll position to top at page refresh
-        // window.addEventListener('beforeunload' , function () {
-        //     window.scrollTo(0, 0);
-        // });
-
-    }; // end ssPreloader
-
-
-   /* Parallax
-    * -------------------------------------------------- */
-    const ssParallax = function() { 
-
-        const rellax = new Rellax('.rellax');
-
-    }; // end ssParallax
-
-
-   /* Move header menu
-    * -------------------------------------------------- */
-    const ssMoveHeader = function () {
-
-        const hdr = document.querySelector('.s-header');
-        const hero = document.querySelector('#hero');
-        let triggerHeight;
-
-        if (!(hdr && hero)) return;
-
-        setTimeout(function(){
-            triggerHeight = hero.offsetHeight - 170;
-        }, 300);
-
-        window.addEventListener('scroll', function () {
-
-            let loc = window.scrollY;
-           
-
-            if (loc > triggerHeight) {
-                hdr.classList.add('sticky');
-            } else {
-                hdr.classList.remove('sticky');
-            }
-
-            if (loc > triggerHeight + 20) {
-                hdr.classList.add('offset');
-            } else {
-                hdr.classList.remove('offset');
-            }
-
-            if (loc > triggerHeight + 150) {
-                hdr.classList.add('scrolling');
-            } else {
-                hdr.classList.remove('scrolling');
-            }
-
-        });
-
-    }; // end ssMoveHeader
-
-
-   /* Mobile Menu
-    * ---------------------------------------------------- */ 
-    const ssMobileMenu = function() {
-
-        const toggleButton = document.querySelector('.s-header__menu-toggle');
-        const headerNavWrap = document.querySelector('.s-header__nav-wrap');
-        const siteBody = document.querySelector("body");
-
-        if (!(toggleButton && headerNavWrap)) return;
-
-        toggleButton.addEventListener('click', function(event){
-            event.preventDefault();
-            toggleButton.classList.toggle('is-clicked');
-            siteBody.classList.toggle('menu-is-open');
-        });
-
-        headerNavWrap.querySelectorAll('.s-header__nav a').forEach(function(link) {
-            link.addEventListener("click", function(evt) {
-
-                // at 800px and below
-                if (window.matchMedia('(max-width: 800px)').matches) {
-                    toggleButton.classList.toggle('is-clicked');
-                    siteBody.classList.toggle('menu-is-open');
-                }
-            });
-        });
-
-        window.addEventListener('resize', function() {
-
-            // above 800px
-            if (window.matchMedia('(min-width: 801px)').matches) {
-                if (siteBody.classList.contains('menu-is-open')) siteBody.classList.remove('menu-is-open');
-                if (toggleButton.classList.contains("is-clicked")) toggleButton.classList.remove("is-clicked");
-            }
-        });
-
-    }; // end ssMobileMenu
-
-
-   /* Highlight active menu link on pagescroll
-    * ------------------------------------------------------ */
-    const ssScrollSpy = function() {
-
-        const sections = document.querySelectorAll(".target-section");
-
-        // Add an event listener listening for scroll
-        window.addEventListener("scroll", navHighlight);
-
-        function navHighlight() {
-        
-            // Get current scroll position
-            let scrollY = window.pageYOffset;
-        
-            // Loop through sections to get height(including padding and border), 
-            // top and ID values for each
-            sections.forEach(function(current) {
-                const sectionHeight = current.offsetHeight;
-                const sectionTop = current.offsetTop - 50;
-                const sectionId = current.getAttribute("id");
-            
-               /* If our current scroll position enters the space where current section 
-                * on screen is, add .current class to parent element(li) of the thecorresponding 
-                * navigation link, else remove it. To know which link is active, we use 
-                * sectionId variable we are getting while looping through sections as 
-                * an selector
-                */
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    document.querySelector(".s-header__nav a[href*=" + sectionId + "]").parentNode.classList.add("current");
-                } else {
-                    document.querySelector(".s-header__nav a[href*=" + sectionId + "]").parentNode.classList.remove("current");
-                }
-            });
-        }
-
-    }; // end ssScrollSpy
-
-
-   /* Swiper
-    * ------------------------------------------------------ */ 
-    const ssSwiper = function() {
-
-        const mySwiper = new Swiper('.swiper-container', {
-
-            slidesPerView: 1,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },          
-            breakpoints: {
-                // when window width is >= 401px
-                401: {
-                    slidesPerView: 1,
-                    spaceBetween: 20
-                },
-                // when window width is >= 801px
-                801: {
-                    slidesPerView: 2,
-                    spaceBetween: 48
-                }
-            }
-         });
-
-    }; // end ssSwiper
-
-
-   /* Lightbox
-    * ------------------------------------------------------ */
-    const ssLightbox = function() {
-
-        const folioLinks = document.querySelectorAll('.folio-item a');
-        const modals = [];
-
-        folioLinks.forEach(function(link) {
-            let modalbox = link.getAttribute('href');
-            let instance = basicLightbox.create(
-                document.querySelector(modalbox),
-                {
-                    onShow: function(instance) {
-                        //detect Escape key press
-                        document.addEventListener("keydown", function(evt) {
-                            evt = evt || window.event;
-                            if(evt.keyCode === 27){
-                            instance.close();
-                            }
-                        });
-                    }
-                }
-            )
-            modals.push(instance);
-        });
-
-        folioLinks.forEach(function(link, index) {
-            link.addEventListener("click", function(e) {
-                e.preventDefault();
-                modals[index].show();
-            });
-        });
-
-    };  // end ssLightbox
-
-
-   /* Alert boxes
-    * ------------------------------------------------------ */
-    const ssAlertBoxes = function() {
-
-        const boxes = document.querySelectorAll('.alert-box');
-  
-        boxes.forEach(function(box) {
-
-            box.addEventListener('click', function(e){
-                if (e.target.matches(".alert-box__close")) {
-                    e.stopPropagation();
-                    e.target.parentElement.classList.add("hideit");
-
-                    setTimeout(function() {
-                        box.style.display = "none";
-                    }, 500)
-                }    
-            });
-
-        })
-
-    }; // end ssAlertBoxes
-
-
-   /* Smoothscroll
-    * ------------------------------------------------------ */
-    const ssSmoothScroll = function () {
-        
-        const triggers = document.querySelectorAll(".smoothscroll");
-
-        triggers.forEach(function(trigger) {
-            trigger.addEventListener("click", function() {
-                const target = trigger.getAttribute("href");
-
-                Jump(target, {
-                    duration: 1200,
-                });
-            });
-        });
-
-    }; // end ssSmoothScroll
-
-
-   /* back to top
-    * ------------------------------------------------------ */
-    const ssBackToTop = function() {
-
-        const pxShow = 900;
-        const goTopButton = document.querySelector(".ss-go-top");
-
-        if (!goTopButton) return;
-
-        // Show or hide the button
-        if (window.scrollY >= pxShow) goTopButton.classList.add("link-is-visible");
-
-        window.addEventListener('scroll', function() {
-            if (window.scrollY >= pxShow) {
-                if(!goTopButton.classList.contains('link-is-visible')) goTopButton.classList.add("link-is-visible")
-            } else {
-                goTopButton.classList.remove("link-is-visible")
-            }
-        });
-
-    }; // end ssBackToTop
-
-
-
-   /* initialize
-    * ------------------------------------------------------ */
-    (function ssInit() {
-
-        ssPreloader();
-        ssParallax();
-        ssMoveHeader();
-        ssMobileMenu();
-        ssScrollSpy();
-        ssSwiper();
-        ssLightbox();
-        ssAlertBoxes();
-        ssSmoothScroll();
-        ssBackToTop();
-
-    })();
-
-})(document.documentElement);
+  } catch (err) {
+    console.error('contact:', err);
+    status.className = 'form-status err';
+    status.textContent = 'Network error — please email me instead.';
+  } finally {
+    submit.disabled = false;
+  }
+});

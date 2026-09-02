@@ -2,6 +2,27 @@
 
 A record of significant changes to this project and why they were made. Newest first.
 
+## September 2026 — frontend rebuild
+
+Replaced the 2013 résumé template with a hand-authored modern static page. No
+framework, no build step.
+
+- **Deleted** jQuery 1.10.2, `plugins.js` (190 KB), Flexslider, Modernizr,
+  Magnific-popup, the bundled Font Awesome, four stylesheets (~230 KB), eight
+  lorem-ipsum "portfolio" modals, ~40 template images, and a PositiveSSL
+  trust-seal script that used `document.write`.
+- **New** `index.html` (semantic single-page: hero, about, experience timeline,
+  education, certifications, contact) + one stylesheet `css/site.css` (CSS custom
+  properties, fluid `clamp()` type, grid/flex, light + dark with a toggle that
+  persists, `prefers-reduced-motion` honoured) + rewritten `js/main.js`.
+- Social and UI icons are inline SVG — no icon-font dependency.
+- **Credly badges lazy-load** via `IntersectionObserver` when the section scrolls
+  near view, instead of loading `embed.js` + 12 iframes on first paint.
+- **Contact form wired to `POST /api/contact`** (with the honeypot field) — the
+  backend endpoint finally has a UI.
+- Scroll-spy nav (`aria-current`), mobile nav, inline theme bootstrap to avoid a
+  flash, `sitemap.xml` / `site.webmanifest` filled in.
+
 ## September 2026 — backend hardening
 
 - **Atomic visitor counter.** Replaced the read-modify-write (`ReadItem` → `+1` →
