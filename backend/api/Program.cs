@@ -12,14 +12,20 @@ var host = new HostBuilder()
     {
         services.AddSingleton(_ =>
         {
-            var connection = Environment.GetEnvironmentVariable("CloudResume")
-                ?? throw new InvalidOperationException("App setting 'CloudResume' (Cosmos connection string) is not set.");
+            var connection = Environment.GetEnvironmentVariable(Db.ConnectionSetting)
+                ?? throw new InvalidOperationException(
+                    $"App setting '{Db.ConnectionSetting}' (Cosmos connection string) is not set.");
             return new CosmosClient(connection, new CosmosClientOptions
             {
-                // Honour the [JsonPropertyName] attributes on the models.
+                // Honour the [JsonPropertyName] attributes on the models
+                // (v3 CosmosClient uses Newtonsoft by default).
                 UseSystemTextJsonSerializerWithOptions = new JsonSerializerOptions()
             });
         });
+
+        services.AddSingleton<CounterStore>();
+        services.AddSingleton<MessageStore>();
+        services.AddMemoryCache(); // best-effort per-instance rate limiting for /api/contact
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();

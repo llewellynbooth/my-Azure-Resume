@@ -1,128 +1,102 @@
-using System.Net;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Company.Function;
 
-public class ContactMessage
-{
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = "";
-
-    [JsonPropertyName("email")]
-    public string Email { get; set; } = "";
-
-    [JsonPropertyName("subject")]
-    public string Subject { get; set; } = "";
-
-    [JsonPropertyName("message")]
-    public string Message { get; set; } = "";
-
-    [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-
-    [JsonPropertyName("ipAddress")]
-    public string IpAddress { get; set; } = "unknown";
-}
-
-// Shape the client sends. Bound case-insensitively.
-public class ContactRequest
-{
-    public string? Name { get; set; }
-    public string? Email { get; set; }
-    public string? Subject { get; set; }
-    public string? Message { get; set; }
-    public string? Website { get; set; } // honeypot — real users leave this empty
-}
-
 public class ContactForm
 {
-    private const int NameMax = 100;
-    private const int EmailMax = 200;
-    private const int SubjectMax = 150;
-    private const int MessageMax = 5000;
+    private const int MaxPerWindow = 5;
+    private static readonly TimeSpan Window = TimeSpan.FromMinutes(10);
+    private static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
 
-    private static readonly Regex EmailPattern =
-        new(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", RegexOptions.Compiled);
-
-    private static readonly JsonSerializerOptions JsonOpts =
-        new() { PropertyNameCaseInsensitive = true };
-
-    private readonly Container _messages;
+    private readonly MessageStore _store;
+    private readonly IMemoryCache _cache;
     private readonly ILogger<ContactForm> _logger;
 
-    public ContactForm(CosmosClient cosmos, ILogger<ContactForm> logger)
+    public ContactForm(MessageStore store, IMemoryCache cache, ILogger<ContactForm> logger)
     {
-        _messages = cosmos.GetContainer("CloudResume", "Messages");
+        _store = store;
+        _cache = cache;
         _logger = logger;
     }
 
     [Function("ContactForm")]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "contact")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "contact")] HttpRequest req,
+        CancellationToken ct)
     {
-        _logger.LogInformation("Contact form submission received.");
+        var ip = ClientIp(req);
+
+        if (!AllowRequest(ip))
+        {
+            _logger.LogWarning("Contact form rate limit hit for {Ip}", ip);
+            return new ObjectResult(new { error = "Too many requests. Please try again later." })
+            {
+                StatusCode = StatusCodes.Status429TooManyRequests
+            };
+        }
 
         ContactRequest? data;
         try
         {
-            data = await JsonSerializer.DeserializeAsync<ContactRequest>(req.Body, JsonOpts);
+            data = await JsonSerializer.DeserializeAsync<ContactRequest>(req.Body, JsonOpts, ct);
         }
         catch (JsonException)
         {
             return new BadRequestObjectResult(new { error = "Request body is not valid JSON." });
         }
 
-        // Honeypot: silently accept and drop bot submissions.
-        if (!string.IsNullOrWhiteSpace(data?.Website))
+        var result = ContactValidator.Validate(data, ip);
+
+        if (result.Outcome == ContactOutcome.Honeypot)
         {
-            _logger.LogWarning("Contact form honeypot triggered; dropping submission.");
+            _logger.LogWarning("Contact form honeypot triggered from {Ip}", ip);
             return new OkObjectResult(new { success = true, message = "Thanks — your message has been received." });
         }
 
-        var name = data?.Name?.Trim() ?? "";
-        var email = data?.Email?.Trim() ?? "";
-        var subject = string.IsNullOrWhiteSpace(data?.Subject) ? "Contact form submission" : data!.Subject!.Trim();
-        var message = data?.Message?.Trim() ?? "";
+        if (result.Outcome == ContactOutcome.Invalid)
+            return new BadRequestObjectResult(new { error = result.Error });
 
-        if (name.Length == 0 || email.Length == 0 || message.Length == 0)
-            return new BadRequestObjectResult(new { error = "Name, email, and message are required." });
-
-        if (name.Length > NameMax || email.Length > EmailMax ||
-            subject.Length > SubjectMax || message.Length > MessageMax)
-            return new BadRequestObjectResult(new { error = "One or more fields exceed the allowed length." });
-
-        if (!EmailPattern.IsMatch(email))
-            return new BadRequestObjectResult(new { error = "Invalid email address." });
-
-        var contactMessage = new ContactMessage
-        {
-            // HTML-encode stored text so it is inert if ever rendered in an admin view.
-            Name = WebUtility.HtmlEncode(name),
-            Email = WebUtility.HtmlEncode(email),
-            Subject = WebUtility.HtmlEncode(subject),
-            Message = WebUtility.HtmlEncode(message),
-            Timestamp = DateTime.UtcNow,
-            IpAddress = req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"
-        };
-
-        await _messages.CreateItemAsync(contactMessage, new PartitionKey(contactMessage.Id));
-        _logger.LogInformation("Contact message stored from {Email}", contactMessage.Email);
+        await _store.AddAsync(result.Message!, ct);
+        _logger.LogInformation("Contact message stored from {Email}", result.Message!.Email);
 
         return new OkObjectResult(new
         {
             success = true,
             message = "Thank you for your message! I'll get back to you soon.",
-            id = contactMessage.Id
+            id = result.Message!.Id
         });
+    }
+
+    // Best-effort, per-instance. A distributed limiter is a follow-up (needs shared state).
+    private bool AllowRequest(string ip)
+    {
+        var key = $"contact-rl:{ip}";
+        var count = _cache.TryGetValue(key, out int existing) ? existing : 0;
+
+        if (count >= MaxPerWindow)
+            return false;
+
+        _cache.Set(key, count + 1, Window);
+        return true;
+    }
+
+    // Behind Azure's edge, RemoteIpAddress is the platform address — the real client
+    // is the first hop of X-Forwarded-For (App Service appends ":port" for IPv4).
+    private static string ClientIp(HttpRequest req)
+    {
+        var forwarded = req.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(forwarded))
+        {
+            var first = forwarded.Split(',')[0].Trim();
+            if (first.Count(c => c == ':') == 1)
+                first = first[..first.IndexOf(':')]; // strip ":port" from IPv4
+            return first;
+        }
+        return req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
     }
 }
