@@ -2,12 +2,12 @@
 # TERRAFORM CONFIGURATION
 # ============================================================
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = ">= 1.9.0"
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.85.0"
+      version = "~> 4.14"
     }
   }
 
@@ -133,7 +133,7 @@ resource "azurerm_cosmosdb_account" "resume" {
   kind                = "GlobalDocumentDB"
 
   # CRITICAL: Free tier - only one per subscription!
-  enable_free_tier = true
+  free_tier_enabled = true
 
   consistency_policy {
     consistency_level = "Session"
@@ -225,7 +225,8 @@ resource "azurerm_windows_function_app" "resume" {
 
   site_config {
     application_stack {
-      dotnet_version = "v8.0"
+      dotnet_version              = "v8.0"
+      use_dotnet_isolated_runtime = true
     }
 
     cors {
@@ -238,7 +239,7 @@ resource "azurerm_windows_function_app" "resume" {
 
   app_settings = {
     "FUNCTIONS_EXTENSION_VERSION"              = "~4"
-    "FUNCTIONS_WORKER_RUNTIME"                 = "dotnet"
+    "FUNCTIONS_WORKER_RUNTIME"                 = "dotnet-isolated"
     "APPINSIGHTS_INSTRUMENTATIONKEY"           = azurerm_application_insights.resume.instrumentation_key
     "APPLICATIONINSIGHTS_CONNECTION_STRING"    = azurerm_application_insights.resume.connection_string
     "CloudResume"                              = azurerm_cosmosdb_account.resume.primary_sql_connection_string

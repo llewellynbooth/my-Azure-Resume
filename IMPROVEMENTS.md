@@ -1,458 +1,109 @@
-# Azure Resume - Comprehensive Improvements Summary
+# Change history
 
-This document details all improvements made to transform your cloud resume from a basic website into a production-ready, enterprise-grade portfolio.
+A record of significant changes to this project and why they were made. Newest first.
 
----
+## September 2026 — currency pass
 
-## 🎯 Overview
+Brought the runtime, tooling, and CI up to current practice.
 
-**Total Commits**: 15+
-**Lines of Code Added**: 1,500+
-**New Features**: 12
-**Security Fixes**: 5
-**Performance Gains**: 60-80% faster load times
+- **Functions → isolated worker model.** Migrated off the in-process model (support ends
+  November 2026). New `Program.cs` host with `ConfigureFunctionsWebApplication()` (ASP.NET Core
+  integration, so functions keep `HttpRequest` / `IActionResult` signatures). `out` parameter
+  and `IAsyncCollector` Cosmos bindings replaced with `[CosmosDBInput]` + `[CosmosDBOutput]` on
+  `MultiResponse` return types. POCOs moved from Newtonsoft `[JsonProperty]` to
+  `System.Text.Json` `[JsonPropertyName]` (the isolated Cosmos binding serializes with STJ).
+  Terraform: `use_dotnet_isolated_runtime = true`, `FUNCTIONS_WORKER_RUNTIME = dotnet-isolated`.
+- **Contact form hardened** (done while rewriting it for isolated): per-field length caps,
+  regex email validation, a honeypot field, and `HtmlEncode` on stored values so they are
+  inert if ever rendered.
+- **CI/CD → OIDC.** The frontend and backend workflows authenticate with GitHub → Azure
+  workload identity federation. Removed the `AZURE_CREDENTIALS` service-principal secret;
+  secrets are now `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` / `AZURE_SUBSCRIPTION_ID`. Frontend
+  blob upload uses `--auth-mode login` (Entra) instead of the storage account key.
+- **Test on PRs.** `backend.main.yml` runs `dotnet test` on pull requests and gates the deploy
+  job (which only runs on push to `main`).
+- **Action versions.** `checkout@v4`, `azure/login@v2`, `azure/cli@v2`, `setup-dotnet@v4`.
+- **Deploy targeting fixed.** The backend workflow now resolves the Function App by name prefix
+  (`resumefunctionapp-win`) instead of `az functionapp list [0]` — there are two apps in the
+  resource group and index 0 was the abandoned one. Resource-group casing corrected to
+  `Azureresume-rg`.
+- **Repo hygiene.** Removed 198 committed `bin/` + `obj/` build artifacts (incl. a stale
+  `netcoreapp3.1` output), the 8 unreferenced jQuery-era JS files, the empty `UnitTest1.cs`
+  placeholder, and the legacy `Microsoft.AspNetCore.Mvc 2.2.0` test dependency.
+- **IaC — status corrected.** The "migrated to Terraform" work from January was never actually
+  imported or applied: `main.tf` resource names do not match the live estate, there is no state
+  backend, and the `production` deployment never went green. Removed the non-functional
+  `terraform.yml` workflow and documented the real state (portal-managed) in
+  `infrastructure/README.md`, with a reconciliation checklist. Kept the `azurerm ~> 4.14` /
+  `free_tier_enabled` edits and the isolated-runtime settings in `main.tf` for when the import
+  happens. Deleted `main.bicep` and the spent `ENABLE-FREE-TIER.md` runbook (both in history).
+- Added `frontend/404.html` (referenced by the static-website config) and `.gitattributes`
+  (LF enforcement so `import-resources.sh` works on Linux CI).
 
----
 
-## 🔒 Security Improvements (CRITICAL)
+## January 2026 — rework
 
-### 1. Removed Exposed API Key
-**Issue**: Function API key hardcoded in `main.js`
-**Fix**: Removed API key, changed Function to Anonymous authentication with CORS
-**Impact**: Prevented unauthorized API access and abuse
-
-### 2. Upgraded .NET Core 3.1 → .NET 8
-**Issue**: Running on EOL framework (no security patches since Dec 2022)
-**Fix**: Full migration to .NET 8 LTS (supported until Nov 2026)
-**Files Changed**:
-- `api.csproj`
-- `tests.csproj`
-- `.vscode/settings.json`
-- Deployment workflows
-
-### 3. Fixed jQuery 1.10.2 Vulnerability
-**Issue**: jQuery 1.10.2 from 2013 with known XSS vulnerabilities
-**Fix**: Removed from loading (files exist but unused), replaced with vanilla JS
-**Impact**: Eliminated XSS attack vector
-
-### 4. Added Security Headers
-**New Headers**:
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: SAMEORIGIN` (prevents clickjacking)
-- `X-XSS-Protection: 1; mode=block`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy` (blocks camera, microphone, geolocation)
-
-### 5. Migrated to Windows Function App
-**Issue**: Linux Function App incompatible with .NET 8 in-process model
-**Fix**: Created new Windows-based Function App `resumefunctionapp-win`
-**Benefit**: Native .NET 8 support without code changes
-
----
-
-## ⚡ Performance Optimizations
-
-### 1. HTTP Compression Enabled
-**Implementation**: `web.config` with gzip compression
-**Impact**: 60-80% smaller file sizes
-**Benefit**: Faster page loads, lower bandwidth costs
-
-### 2. Caching Headers Configured
-**Implementation**: 7-day cache for static assets
-**Impact**: Repeat visitors load instantly
-**Benefit**: Reduced server costs, better UX
-
-### 3. Loading States & Error Handling
-**Before**: Counter showed nothing if API failed
-**After**: Shows "..." while loading, "N/A" with tooltip on error
-**Code Quality**: Proper HTTP status checking, locale-aware formatting
-
-### 4. Resource Loading Optimization
-**Fixes**:
-- Removed duplicate `main.js` load from header
-- Added `defer` to Font Awesome
-- Async loading for Credly badges
-- `will-change` hints for animations
-- `font-display: swap` for faster text rendering
-
-### 5. Reduced Motion Support
-**Implementation**: CSS media query for accessibility
-**Benefit**: Better UX for users with vestibular disorders
-
----
-
-## 🎨 UX/Design Improvements
-
-### 1. Dark Mode Toggle
-**Features**:
-- Fixed button (bottom-right corner)
-- 🌓 Moon emoji indicator
-- Saves preference to localStorage
-- Respects `prefers-color-scheme`
-- Smooth 0.3s transitions
-- CSS variables for easy customization
-
-**Files**:
-- `css/dark-mode.css` (new)
-- `main.js` (dark mode functions)
-- `index.html` (toggle button)
-
-### 2. Improved Counter UX
-**Enhancements**:
-- Number formatting with commas (1,234 vs 1234)
-- Loading state indicator
-- Error fallback with tooltip
-- ARIA live region for screen readers
-
-### 3. Skip-to-Content Link
-**Implementation**: Keyboard-accessible skip link
-**Benefit**: WCAG AA compliance
-**Use**: Press Tab to reveal, Enter to skip navigation
-
----
-
-## ♿ Accessibility Improvements (WCAG 2.1 AA)
-
-### 1. ARIA Labels & Roles
-**Added**:
-- `role="banner"` for header
-- `role="navigation"` for nav
-- `role="menubar"` and `role="menuitem"` for navigation items
-- `aria-label` for all interactive elements
-- `aria-live="polite"` for counter updates
-- `aria-hidden` for decorative elements
-
-### 2. Keyboard Navigation
-**Features**:
-- Focus-visible styles (blue outline)
-- Skip-to-content link
-- All interactive elements keyboard-accessible
-- Proper tab order
-
-### 3. Semantic HTML
-**Improvements**:
-- Proper heading hierarchy
-- Landmark roles
-- Better navigation structure
-- Alt text for images (placeholder)
-
----
-
-## 📈 SEO Enhancements
-
-### 1. Comprehensive Meta Tags
-**Added**:
-- Enhanced title tag with keywords
-- 160-character meta description
-- Keywords meta tag
-- Open Graph tags (Facebook/LinkedIn)
-- Twitter Cards
-- Canonical URL
-
-### 2. Structured Data (JSON-LD)
-**Implementation**: Schema.org Person type
-**Benefits**:
-- Rich snippets in Google
-- Knowledge graph eligibility
-- Better search visibility
-
-**Includes**:
-- Name, job title, employer
-- Skills and expertise
-- Social media profiles
-- Profile image
-
-### 3. SEO Files
-**Created**:
-- `sitemap.xml` (helps search engines discover pages)
-- `robots.txt` (tells crawlers what to index)
-
-**URLs Updated**: All URLs corrected from z13 to z8
-
----
-
-## 🚀 New Features
-
-### 1. Contact Form Backend
-**File**: `backend/api/ContactForm.cs`
-**Endpoint**: `POST /api/contact`
-**Features**:
-- Email validation
-- Spam protection (IP logging)
-- Saves to Cosmos DB `Messages` container
-- Returns success/error JSON
-- Anonymous access with CORS
-
-**Database Schema**:
-```json
-{
-  "id": "guid",
-  "name": "string",
-  "email": "string",
-  "subject": "string",
-  "message": "string",
-  "timestamp": "datetime",
-  "ipAddress": "string"
-}
-```
-
-### 2. Health Check Endpoint
-**File**: `backend/api/HealthCheck.cs`
-**Endpoint**: `GET /api/health`
-**Purpose**: Monitoring and uptime checks
-**Response**:
-```json
-{
-  "status": "healthy",
-  "timestamp": "2026-01-08T10:30:00Z",
-  "service": "Azure Resume API",
-  "version": "1.0.0",
-  "checks": {
-    "database": "connected",
-    "api": "operational"
-  }
-}
-```
-
-### 3. Infrastructure as Code (Bicep)
-**File**: `infrastructure/main.bicep`
-**Resources Defined**:
-- Storage Account (static website)
-- Azure Functions (Windows, .NET 8)
-- Cosmos DB (with Counter + Messages containers)
-- CDN Profile and Endpoint
-- Application Insights
-- App Service Plan (Consumption)
-
-**Benefits**:
-- Reproducible deployments
-- Disaster recovery
-- Environment parity (dev/staging/prod)
-- Version-controlled infrastructure
-- Cost estimates documented
-
-**Deployment**:
-```bash
-az deployment group create \
-  --resource-group azureresume-rg \
-  --template-file infrastructure/main.bicep
-```
-
-### 4. Application Insights Integration
-**Implementation**: Bicep template + Function App settings
-**Metrics Tracked**:
-- Function execution times
-- Error rates
-- Request counts
-- Cosmos DB dependency calls
-- Custom metrics
-
-**Cost**: Free tier (first 5GB/month)
-
----
-
-## 🧪 Testing Improvements
-
-### Before
-**File**: `TestCounter.cs`
-**Status**: Won't compile (10+ syntax errors)
-**Tests**: 0 working
-
-### After
-**File**: `TestCounter.cs`
-**Status**: Compiles cleanly
-**Tests**: 3 comprehensive unit tests
-**Coverage**:
-1. `Counter_Should_Increment_By_One()` - Tests increment logic
-2. `Counter_Should_Have_Valid_Id()` - Tests data validation
-3. `Counter_Should_Not_Be_Negative()` - Tests constraints
-
-**Pattern**: AAA (Arrange, Act, Assert)
-
----
-
-## 📁 Project Structure Changes
-
-### New Files Created
-```
-my-Azure-Resume/
-├── backend/
-│   ├── api/
-│   │   ├── ContactForm.cs          [NEW] Contact form endpoint
-│   │   └── HealthCheck.cs          [NEW] Health monitoring
-│   └── tests/
-│       └── TestCounter.cs          [FIXED] Working tests
-├── frontend/
-│   ├── css/
-│   │   └── dark-mode.css           [NEW] Dark mode styles
-│   ├── robots.txt                  [NEW] SEO crawler instructions
-│   ├── sitemap.xml                 [NEW] SEO sitemap
-│   └── web.config                  [NEW] Azure optimization
-├── infrastructure/
-│   ├── main.bicep                  [NEW] IaC template
-│   └── README.md                   [NEW] Deployment guide
-└── IMPROVEMENTS.md                 [NEW] This file
-```
-
-### Modified Files
-```
-frontend/
-├── index.html          - SEO tags, accessibility, dark mode button
-├── main.js             - Dark mode, error handling, loading states
-
-backend/
-├── api/
-│   ├── api.csproj              - .NET 8, updated packages
-│   └── getResumeFunction.cs    - Anonymous auth, bug fix
-├── tests/
-│   └── tests.csproj            - .NET 8, updated test packages
-
-.github/workflows/
-├── backend.main.yml    - Windows deployment, runtime config
-└── frontend.main.yml   - (unchanged)
-
-.vscode/
-└── settings.json       - .NET 8, Functions v4
-```
-
----
-
-## 📊 Metrics & Impact
-
-### Performance
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Page Load (3G) | ~5s | ~2s | 60% faster |
-| Total JS Size | ~400KB | ~400KB | Same (minification pending) |
-| CSS Size | 112KB | 112KB + 2KB | Minimal increase (dark mode) |
-| Compression | None | Gzip | 60-80% smaller |
-| Caching | None | 7 days | Instant repeat loads |
+Moved the project from a basic static page with one Function to the current shape.
 
 ### Security
-| Item | Before | After |
-|------|--------|-------|
-| Exposed Secrets | 1 (API key) | 0 |
-| Security Headers | 0 | 5 |
-| .NET Version | 3.1 (EOL) | 8.0 (LTS) |
-| jQuery Vuln | Yes | Mitigated |
+
+- **Removed a hardcoded Function API key** from `frontend/js/main.js`. The counter endpoint is
+  now `AuthorizationLevel.Anonymous` with CORS restricted to the site origins in the Function
+  App config. *(The key is still present in git history — see "Outstanding" below.)*
+- **Upgraded the Functions runtime from .NET Core 3.1 (EOL) to .NET 8 LTS.** Touched
+  `api.csproj`, `tests.csproj`, `.vscode/settings.json`, and the deploy workflow.
+- **Stopped loading jQuery 1.10.2** (2013, known XSS issues). Counter and dark-mode logic are
+  vanilla JS. The old vendored files still sit in `frontend/js/` unused — removal is pending.
+- **Added response security headers** via `frontend/web.config`: `X-Content-Type-Options`,
+  `X-Frame-Options`, `X-XSS-Protection`, `Referrer-Policy`, `Permissions-Policy`.
+- **Moved the Function App to a Windows plan** for native .NET 8 in-process support.
+
+### Performance
+
+- Enabled gzip compression and a 7-day cache header for static assets via `web.config`.
+- Removed a duplicate `main.js` include; deferred Font Awesome; made the Credly embed async.
+- Added `prefers-reduced-motion` handling.
 
 ### Accessibility
-| WCAG Criteria | Before | After |
-|---------------|--------|-------|
-| Perceivable | ⚠️ Partial | ✅ AA |
-| Operable | ⚠️ Partial | ✅ AA |
-| Understandable | ⚠️ Partial | ✅ AA |
-| Robust | ⚠️ Partial | ✅ AA |
+
+- Added landmark roles, `aria-label`s on interactive elements, and `aria-live="polite"` on the
+  counter.
+- Added a keyboard skip-to-content link and focus-visible styles.
+- Tidied heading hierarchy and navigation structure.
+
+### SEO
+
+- Expanded meta tags (description, Open Graph, Twitter Card, canonical).
+- Added Schema.org `Person` JSON-LD, `sitemap.xml`, and `robots.txt`.
+- Corrected static-site URLs from the `z13` to the `z8` storage sub-domain.
 
 ### Features
-- **Before**: 1 feature (visitor counter)
-- **After**: 5 features (counter, dark mode, contact form, health check, monitoring)
 
----
+- **Contact form API** (`backend/api/ContactForm.cs`) — `POST /api/contact`, validates name /
+  email / message, writes to the Cosmos `Messages` container.
+- **Health endpoint** (`backend/api/HealthCheck.cs`) — `GET /api/health`, reports status and
+  whether the Cosmos binding resolved.
+- **Application Insights** wired into the Function App.
+- **Dark-mode toggle** with `localStorage` persistence and `prefers-color-scheme` default.
 
-## 🎓 Skills Demonstrated
+### Testing
 
-This project now showcases:
+- Rewrote `backend/tests/TestCounter.cs` (previously did not compile) into three xUnit tests
+  covering increment, id validation, and the non-negative constraint.
 
-✅ **Cloud Architecture** - Azure PaaS services (Functions, Cosmos DB, CDN, Storage)
-✅ **DevOps** - CI/CD pipelines, IaC (Bicep), automated deployments
-✅ **Backend Development** - .NET 8, C#, serverless architecture, RESTful APIs
-✅ **Frontend Development** - Modern JavaScript, CSS3, responsive design, accessibility
-✅ **Security** - OWASP best practices, secret management, security headers
-✅ **Testing** - Unit testing, xUnit, AAA pattern
-✅ **Monitoring** - Application Insights, health checks, logging
-✅ **SEO** - Meta tags, structured data, sitemaps
-✅ **UX Design** - Dark mode, loading states, error handling
-✅ **Documentation** - Comprehensive README files, code comments
+### Infrastructure as code
 
----
+- Authored a Bicep template, then **migrated to Terraform** (`infrastructure/main.tf`) with
+  remote state in Azure Blob Storage and an import script for the existing resources.
+- Enabled the **Cosmos DB account free tier**, taking the monthly run cost to ~A$0.60.
 
-## 💰 Cost Optimization
+## Outstanding
 
-### Current Cost Estimate (Consumption Tier)
-- **Storage Account**: $0.50/month
-- **Azure Functions**: $0/month (free tier, low traffic)
-- **Cosmos DB**: $24/month (400 RU/s)
-- **CDN**: $0.10/month
-- **Application Insights**: $0/month (free tier)
+Tracked in the README roadmap. In priority order:
 
-**Total**: ~$25/month
-
-### Future Optimization Options
-- Use Cosmos DB free tier (if eligible): -$24/month
-- Keep only CDN and Storage: **~$1/month**
-
----
-
-## 🚀 Deployment Status
-
-### Current Deployments
-✅ Frontend - Deployed to Azure Blob Storage
-✅ Backend - Deployed to Windows Function App
-✅ Database - Cosmos DB operational
-✅ CDN - Enabled and purging on deploy
-✅ Monitoring - Application Insights configured
-
-### Pending Deployments
-⏳ **Contact Form Frontend** - Backend ready, frontend UI needed
-⏳ **Infrastructure** - Bicep template ready, deployment optional
-
----
-
-## 📝 Next Steps (Optional Enhancements)
-
-### High Priority
-1. **Add Contact Form Frontend UI** - Backend is ready
-2. **Deploy IaC Template** - Ensure infrastructure is codified
-3. **Enable Cosmos DB Free Tier** - Save $24/month
-
-### Medium Priority
-4. **Minify CSS/JS** - Reduce file sizes by 40%
-5. **Image Optimization** - Convert to WebP, add lazy loading
-6. **Add Blog Section** - Share technical articles
-7. **Projects Showcase** - Link GitHub repos with descriptions
-
-### Low Priority
-8. **Multi-Region Deployment** - Azure Front Door + geo-redundancy
-9. **Custom Domain** - Purchase domain, add SSL
-10. **Analytics Dashboard** - Visualize visitor stats
-
----
-
-## 📚 Documentation
-
-### Created Documentation
-- `infrastructure/README.md` - IaC deployment guide
-- `IMPROVEMENTS.md` - This comprehensive summary
-- Inline code comments throughout
-- Bicep template comments
-
-### External Resources
-- [Azure Cloud Resume Challenge](https://cloudresumechallenge.dev/)
-- [.NET 8 Documentation](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-8)
-- [Azure Bicep Documentation](https://learn.microsoft.com/azure/azure-resource-manager/bicep/)
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-
----
-
-## 🎉 Summary
-
-Your Azure Resume has been transformed from a basic website into a **production-ready, enterprise-grade portfolio** that demonstrates:
-
-- Modern cloud architecture
-- Security best practices
-- Accessibility compliance
-- SEO optimization
-- Performance engineering
-- DevOps automation
-- Infrastructure as Code
-- Comprehensive testing
-
-**This project is now competitive with Fortune 500 company standards.**
-
----
-
-*Last Updated: January 8, 2026*
-*Total Development Time: ~6 hours*
-*Commits: 15+*
-*Files Changed: 20+*
+1. Rotate the Cosmos key and any old service principal — the repo is public and the historical
+   hardcoded API key is still reachable in git history.
+2. Retire the remaining `frontend/js/plugins.js` bundle and the jQuery-era template.
+3. Move the CDN from Azure CDN Standard (classic) to Azure Front Door Standard.
+4. Custom domain + managed TLS.
+5. Consider a real rate limit on `/api/contact` (per-IP) beyond the honeypot.

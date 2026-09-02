@@ -1,49 +1,77 @@
 name: deploy_backend
-# deploy when push is made to backend folder.
+# On PRs: build + test only. On push to main / manual: build, test, deploy.
 
 on:
-    push:
-        branches: [ main ]
-        paths:
-        - 'backend/**'
-    workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.main.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.main.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # OIDC federated login to Azure
+  contents: read
+
+env:
+  RESOURCE_GROUP: Azureresume-rg
+  # The Function App that actually serves the site. There are two apps in the RG;
+  # do not resolve by list index.
+  FUNCTION_APP_PREFIX: resumefunctionapp-win
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore backend/tests/tests.csproj
+      - name: Test
+        run: dotnet test backend/tests/tests.csproj --configuration Release --no-restore
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
+  build-and-deploy:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Build with dotnet
-      run: dotnet build backend/api/api.csproj --configuration Release
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Publish with dotnet
-      run: dotnet publish backend/api/api.csproj --configuration Release --output ./publish
+      - name: Publish
+        run: dotnet publish backend/api/api.csproj --configuration Release --output ./publish
 
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Get Function App Name
-      id: get-function-name
-      run: |
-        FUNCTION_APP=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
-        echo "function_app_name=$FUNCTION_APP" >> $GITHUB_OUTPUT
-        echo "Deploying to: $FUNCTION_APP"
+      - name: Resolve Function App name
+        id: fn
+        run: |
+          name=$(az functionapp list --resource-group "$RESOURCE_GROUP" \
+            --query "[?starts_with(name, '${FUNCTION_APP_PREFIX}')].name | [0]" -o tsv)
+          if [ -z "$name" ]; then echo "No function app matching '${FUNCTION_APP_PREFIX}' in $RESOURCE_GROUP" >&2; exit 1; fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "Deploying to: $name"
 
-    - name: Deploy to Azure Functions (Windows)
-      uses: Azure/functions-action@v1
-      with:
-        app-name: ${{ steps.get-function-name.outputs.function_app_name }}
-        package: './publish'
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ steps.fn.outputs.name }}
+          package: ./publish
 
-    - name: logout
-      run: |
-            az logout
-      if: always()
+      - name: Azure logout
+        if: always()
+        run: az logout
