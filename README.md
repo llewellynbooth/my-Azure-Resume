@@ -50,7 +50,7 @@ dependency calls.
 
 | Layer | Choice |
 |---|---|
-| Frontend | Static HTML / CSS / JS — dark-mode toggle, Credly badge embed, Font Awesome |
+| Frontend | Hand-authored static HTML + one stylesheet + vanilla JS — no framework, no build step; light/dark toggle, inline-SVG icons, lazy-loaded Credly badges, contact form wired to the API |
 | Hosting | Azure Storage static website, fronted by Azure CDN (Standard Microsoft) |
 | API | C# / .NET 8, Azure Functions v4 (isolated worker model, ASP.NET Core integration) |
 | Database | Azure Cosmos DB for NoSQL — free tier, 400 RU/s, `Counter` + `Messages` containers |
@@ -126,19 +126,19 @@ there is no state backend yet. Reconciling it is a tracked task; see
 
 ## Roadmap
 
-**Done** — Functions on the .NET 8 **isolated worker** model; frontend + backend CI/CD on OIDC
-workload identity (no stored secrets); `dotnet test` gate before deploy; **atomic** counter
-(`PatchItemAsync` increment) with GET read / POST write; contact form hardened (validation,
-honeypot, HTML-encoding, per-IP rate limit) and unit-tested; Cosmos access behind a small
-store layer; Cosmos key rotated; legacy vendored JS and committed build artifacts removed;
-Bicep retired.
+**Done** — **frontend rebuilt** from scratch (no framework/build step, ~450 KB of template
+JS/CSS deleted, light+dark, lazy-loaded badges, contact form wired to the API); Functions on
+the .NET 8 **isolated worker** model; frontend + backend CI/CD on OIDC workload identity (no
+stored secrets); `dotnet test` gate before deploy; **atomic** counter (`PatchItemAsync`
+increment) with GET read / POST write; contact form hardened (validation, honeypot,
+HTML-encoding, per-IP rate limit) and unit-tested; Cosmos access behind a small store layer;
+Cosmos key rotated; Bicep retired.
 
 **Next**, roughly in priority order:
 
 - **Reconcile Terraform with the live estate** — rename resources in `main.tf` to match, stand
   up a state backend, `terraform import`, plan-to-zero, then re-add a CI workflow.
 - **Distributed rate limiting** for `/api/contact` — the current limiter is per-instance.
-- **Frontend rebuild.** Retire the remaining `plugins.js` bundle and the jQuery-era template.
 - **CDN → Front Door** (confirm whether the profile is already Front Door) + **custom domain +
   managed TLS**.
 

@@ -1,721 +1,413 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en" class="no-js">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
 
-    <!--- basic page needs
-    ================================================== -->
-    <meta charset="utf-8">
-    <title>Llewellyn Booth - Azure Infrastructure & Cloud Engineer | Resume</title>
-    <meta name="description" content="Infrastructure Engineer specializing in Azure Cloud, Network Engineering, and IT Infrastructure Management. 20+ years experience with 12+ professional certifications including Azure Solutions Architect and Azure Administrator.">
-    <meta name="author" content="Llewellyn Booth">
-    <meta name="keywords" content="Azure Cloud Engineer, Infrastructure Engineer, Network Engineer, Azure Solutions Architect, DevOps, Cloud Architecture, Azure Administrator, IT Infrastructure, Cisco, Microsoft Azure, Cloud Resume Challenge">
+  <title>Llewellyn Booth — Infrastructure &amp; Cloud Engineer</title>
+  <meta name="description" content="Infrastructure Engineer specialising in Azure Cloud, hybrid infrastructure, and networking. 20+ years across managed services and enterprise IT, with 12 active Microsoft and Cisco certifications.">
+  <meta name="author" content="Llewellyn Booth">
+  <meta name="keywords" content="Azure Cloud Engineer, Infrastructure Engineer, Network Engineer, Azure Solutions Architect, Hybrid Cloud, DevOps, Cisco Meraki, Cloud Resume Challenge">
+  <link rel="canonical" href="https://resumestore100.z8.web.core.windows.net/">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://resumestore100.z8.web.core.windows.net/">
-    <meta property="og:title" content="Llewellyn Booth - Azure Infrastructure & Cloud Engineer">
-    <meta property="og:description" content="Infrastructure Engineer with 20+ years experience in Azure Cloud, Network Engineering, and IT Infrastructure Management. Microsoft Azure Certified Solutions Architect.">
-    <meta property="og:image" content="https://resumestore100.z8.web.core.windows.net/images/profile-pic.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://resumestore100.z8.web.core.windows.net/">
+  <meta property="og:title" content="Llewellyn Booth — Infrastructure &amp; Cloud Engineer">
+  <meta property="og:description" content="Infrastructure Engineer specialising in Azure Cloud, hybrid infrastructure, and networking. 20+ years' experience, 12 active certifications.">
+  <meta property="og:image" content="https://resumestore100.z8.web.core.windows.net/images/me.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@LlewellynXBooth">
+  <meta name="twitter:title" content="Llewellyn Booth — Infrastructure &amp; Cloud Engineer">
+  <meta name="twitter:description" content="Infrastructure Engineer specialising in Azure Cloud, hybrid infrastructure, and networking.">
+  <meta name="twitter:image" content="https://resumestore100.z8.web.core.windows.net/images/me.png">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://resumestore100.z8.web.core.windows.net/">
-    <meta property="twitter:title" content="Llewellyn Booth - Azure Infrastructure & Cloud Engineer">
-    <meta property="twitter:description" content="Infrastructure Engineer with 20+ years experience in Azure Cloud, Network Engineering, and IT Infrastructure Management.">
-    <meta property="twitter:image" content="https://resumestore100.z8.web.core.windows.net/images/profile-pic.jpg">
-    <meta name="twitter:creator" content="@LlewellynXBooth">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
 
-    <!-- Additional SEO -->
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="7 days">
-    <link rel="canonical" href="https://resumestore100.z8.web.core.windows.net/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/site.css">
 
-    <!-- mobile specific metas
-    ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // Apply a stored theme choice before paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
 
-    <!-- CSS
-    ================================================== -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/vendor.css">
-    <link rel="stylesheet" href="css/dark-mode.css">
-    <link rel="stylesheet" href="css/layout-improvements.css">
-
-    <!-- script
-    ================================================== -->
-    <script defer src="js/vendor/fontawesome/all.min.js"></script>
-    <script type="text/javascript" async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
-    
-    
-
-  
-
-    <!-- favicons
-    ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-
-    <!-- Structured Data (JSON-LD) for SEO -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "Person",
-      "name": "Llewellyn Booth",
-      "url": "https://resumestore100.z8.web.core.windows.net/",
-      "image": "https://resumestore100.z8.web.core.windows.net/images/profile-pic.jpg",
-      "jobTitle": "Infrastructure Engineer",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Orro"
-      },
-      "description": "Infrastructure Engineer specializing in Azure Cloud, Network Engineering, and IT Infrastructure Management with 20+ years of experience.",
-      "sameAs": [
-        "https://www.linkedin.com/in/llewellyn-booth",
-        "https://github.com/llewellynbooth",
-        "https://twitter.com/LlewellynXBooth"
-      ],
-      "knowsAbout": [
-        "Microsoft Azure",
-        "Cloud Architecture",
-        "Network Engineering",
-        "Infrastructure Management",
-        "DevOps",
-        "Azure Solutions Architect",
-        "IT Infrastructure"
-      ]
-    }
-    </script>
-
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Person",
+    "name": "Llewellyn Booth",
+    "url": "https://resumestore100.z8.web.core.windows.net/",
+    "image": "https://resumestore100.z8.web.core.windows.net/images/me.png",
+    "jobTitle": "Infrastructure Engineer",
+    "worksFor": { "@type": "Organization", "name": "Orro Group" },
+    "description": "Infrastructure Engineer specialising in Azure Cloud, hybrid infrastructure, and networking, with 20+ years of experience.",
+    "sameAs": [
+      "https://www.linkedin.com/in/llewellyn-booth",
+      "https://github.com/llewellynbooth",
+      "https://twitter.com/LlewellynXBooth"
+    ],
+    "knowsAbout": ["Microsoft Azure", "Hybrid Cloud", "Azure Local / HCI", "Network Engineering", "Infrastructure Management", "DevOps", "Cisco Meraki SD-WAN"]
+  }
+  </script>
 </head>
 
-<body id="top" class="ss-preload">
+<body id="top">
+  <a href="#main" class="skip-link">Skip to content</a>
 
-    <!-- Skip to main content for accessibility -->
-    <a href="#hero" class="skip-link">Skip to main content</a>
-
-    <!-- preloader
-    ================================================== -->
-    <div id="preloader" aria-hidden="true">
-        <div id="loader" role="status" aria-label="Loading"></div>
-    </div>
-
-
-    <!-- header
-    ================================================== -->
-    <header class="s-header" role="banner">
-        <div class="row s-header__nav-wrap">
-            <nav class="s-header__nav" role="navigation" aria-label="Main navigation">
-                <ul role="menubar">
-                    <li role="none" class="current"><a role="menuitem" class="smoothscroll" href="#hero">Home</a></li>
-                    <li role="none"><a role="menuitem" class="smoothscroll" href="#about">About</a></li>
-                    <li role="none"><a role="menuitem" class="smoothscroll" href="#resume">Resume</a></li>
-                    <li role="none"><a role="menuitem" class="smoothscroll" href="#portfolio">Certification</a></li>
-                    <li role="none" class="nav-download">
-                        <a role="menuitem" href="https://1drv.ms/w/c/38a387b5d46735f6/IQP2NWfUtYejIIA40gAAAAAAAUdLHIie0kQ5iDVtc8II4xU?download=1" class="btn btn--download" aria-label="Download Resume PDF">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="15" viewBox="0 0 24 24" style="fill:currentColor;"><path d="M12 16L16 11 13 11 13 4 11 4 11 11 8 11z"></path><path d="M20,18H4v-7H2v7c0,1.103,0.897,2,2,2h16c1.103,0,2-0.897,2-2v-7h-2V18z"></path></svg>
-                            Download Resume
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div> <!-- end row -->
-        
-        
-        <a class="s-header__menu-toggle" href="#0" title="Menu">
-            <span class="s-header__menu-icon"></span>
+  <header class="site-header">
+    <div class="container">
+      <a href="#top" class="brand">Llewellyn<span>.</span>Booth</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="nav" aria-label="Section navigation">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn--primary" href="https://1drv.ms/w/c/38a387b5d46735f6/IQP2NWfUtYejIIA40gAAAAAAAUdLHIie0kQ5iDVtc8II4xU?download=1">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l4-5h-3V4h-2v7H8l4 5z"/><path d="M20 18H4v-7H2v7c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+          Résumé
         </a>
-    </header> <!-- end s-header -->
+      </nav>
+    </div>
+  </header>
 
+  <main id="main">
 
-    <!-- hero
-    ================================================== -->
-    <section id="hero" class="s-hero target-section">
-
-        <div class="s-hero__bg rellax" data-rellax-speed="-7"></div>
-
-        <div class="row s-hero__content">
-            <div class="column">
-
-                <div class="s-hero__content-about">
-
-                    <h1>Hi, I'm Llewellyn Booth.</h1>
-
-                    <h3>
-                    I'm an <span>Infrastructure Engineer</span>, <span>Network and Cloud Engineer</span>, and <span>Azure Specialist</span> passionate about all things technology. Let's <a class="smoothscroll" href="#about">start scrolling</a>
-                    and learn more <a class="smoothscroll" href="#about">about me</a>.
-                    </h3>
-                    <p>Fun Fact: This page has been viewed <a id="counter"></a> times!</p> 
-                    <div class="s-hero__content-social">
-                        <a href="https://linkedin.com/in/llewellyn-booth"target="_blank"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
-                        <a href="https://github.com/llewellynbooth"target="_blank"><i class="fab fa-github" aria-hidden="true"></i></a>
-                        <a href="https://twitter.com/LlewellynXBooth"target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-                        
-                    </div>
-
-                </div> <!-- end s-hero__content-about -->
-
-            </div>
-        </div> <!-- s-hero__content -->
-
-        <div class="s-hero__scroll">
-            <a href="#about" class="s-hero__scroll-link smoothscroll">
-                <span class="scroll-arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill:rgba(0, 0, 0, 1);transform:;-ms-filter:"><path d="M18.707 12.707L17.293 11.293 13 15.586 13 6 11 6 11 15.586 6.707 11.293 5.293 12.707 12 19.414z"></path></svg>
-                </span>
-                <span class="scroll-text">Scroll Down</span>
-            </a>
-        </div> <!-- s-hero__scroll -->
-
-    </section> <!-- end s-hero -->
-
-
-    <!-- about
-    ================================================== -->
-    <section id="about" class="s-about target-section">
-
-        <div class="row">
-            <div class="column large-4 tab-12">
-                <img class="s-about__pic" src="images/me.png"  alt="">
-            </div>
-            <div class="column large-8 tab-12 s-about__content">
-                <h3>About Me</h3>
-                <p>
-                    I am an accomplished Infrastructure Engineer with a proven track record in designing, implementing, and managing robust IT infrastructures that power business success. Specializing in Hybrid infrastructure (HCI Stack, VMware and HyperV), Windows Server environments, Azure Cloud, and advanced networking (with a particular focus on SD-WAN solutions like Cisco Meraki), I have consistently delivered scalable, high-performance solutions that enhance system reliability and drive operational efficiency.
-                </p>
-                <p>
-                    I excel in tackling complex technical challenges, optimizing system performance, and ensuring seamless integration across diverse environments. My methodical approach to problem-solving and technical proficiency enables me to not only resolve issues quickly but also implement forward-thinking solutions that meet both current and future needs. Whether working independently or collaborating with cross-functional teams, I deliver results that support business growth and innovation.
-                </p>
-                <p>
-                     Systems Infrastructure Engineering is more than just a career to me—it's my passion. I am constantly driven by the desire to stay ahead of technological advancements. I am deeply engaged with cutting-edge technologies, particularly in the realms of Azure Cloud, network infrastructure, automation, and DevOps. My versatility, strong work ethic, and commitment to continuous improvement make me a strong asset for any team looking to enhance their IT infrastructure and operations.
-                </p>
-
-                <hr>
-
-                <div class="row s-about__content-bottom">
-                    <div class="column w-1000-stack">
-                        <h3>Contact Details</h3>
-    
-                        <p>
-                        Llewellyn Booth <br>
-                    
-                        <a href="mailto:#0">llewellynbooth1@gmail.com</a>
-                      
-                        </p>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-        </div> <!-- end row -->
-
-    </section> <!-- end s-about -->
-
-
-    <!-- resume
-    ================================================== -->
-    <section id="resume" class="s-resume target-section">
-        
-        <div class="row s-resume__section">
-            <div class="column large-3 tab-12">
-                <h3 class="section-header-allcaps">Career</h3>
-            </div>
-            <div class="column large-9 tab-12">
-                <div class="resume-block">
-                    <div class="resume-block__header">
-                        <h4 class="h3">Orro Group</h4>
-                        <p class="resume-block__header-meta">
-                            <span>
-                                Cloud infrastructure Engineer</span> 
-                            <span class="resume-block__header-date">
-                                July 2024 - current
-                            </span>
-                        </p>
-                    </div>
-                  <p>
-                        Orro Group is a leading technology partner with a strong presence across Australia, New Zealand, the UK, and the Philippines. The company excels in cybersecurity, Cloud infrastructure, and is a Tier 1 network provider. It is also a key player in critical infrastructure solutions, including OT (Operational Technology). With a focus on innovation, Orro delivers professional and managed services that enhance efficiency, performance, and resilience for businesses of all sizes.
-                  </p>
-                 
-                   <p>
-                       After Orro's acquisition of my previous company, NW Computing, I transitioned into a role within the Cloud Infrastructure team. This move expanded my perspective, allowing me to engage with high-performance teams and work with some of the most sought-after clients, including Qantas Airlines and Australia Post. I gained valuable insight into working with a Tier 1 provider that fosters growth and serves high-level, enterprise-level customers.
-                            
-                 </p>
-                 <p>
-                     My role at Orro further developed my expertise in IT systems and infrastructure while providing opportunities to contribute to large-scale, high-impact projects. In this dynamic environment, I deepened my technical knowledge, broadened my skillset, and collaborated with top-tier professionals and clients.   
-                  </p>
-                    <p> Key responsibilities:
-                    </p>
-                    <ul>
-                    <li>Cloud platform management and monitoring, specializing in Azure and Cisco Meraki.</i> 
-                    <li>Provisioned cloud infrastructure (VMs, storage, networking, load balancers, databases) to align with business needs.</i>
-                    <li>Optimized cloud costs by analyzing usage and reallocating resources efficiently.</i> 
-                    <li>Supported PMO with ad-hoc projects during peak periods, ensuring timely and quality delivery. </i>
-                    <li>Played a key role in cloud migration strategies, ensuring seamless transitions from on-premises to cloud. </i>
-                    <li>Provided presales support, acting as a subject matter expert for Azure products. </i>
-                    </ul>
-                    <div class="resume-block__header">
-                        <h4 class="h3">NW Computing</h4>
-                        <p class="resume-block__header-meta">
-                            <span>Systems Engineer - (NetOps)</span> 
-                            <span class="resume-block__header-date">
-                                October 2022 - July 2024
-                            </span>
-                        </p>
-                    </div>
-                    <p>
-                       NW Computing, based in Melbourne with a national presence across Australia, is a leading provider of cloud solutions and managed services. We specialize in simplifying cloud adoption and delivering tailored IT solutions for businesses of all sizes. With strong partnerships with Microsoft and Cisco Meraki, NW Computing is known for its expertise in Azure and SD-WAN deployments and management.
-                    </p>
-                    <p> 
-                        As a member of the Systems Infrastructure team, I work within a close-knit, highly collaborative group. We are responsible for monitoring, maintaining, and supporting our customers' IT infrastructures, handling high-priority escalations, and delivering ad hoc project work. Our focus is on resolving complex incidents, providing training, and ensuring that both our team and clients receive top-tier support.                      
-                    </p>   
-                     <p> Key responsibilities:
-                    </p>
-                    <ul>
-                    <li>Serving as the main point of contact for the Network Operations Team and high-priority Service Desk incidents.</i>
-                    <li>Ensuring effective management, monitoring, and maintenance of networks and server infrastructure.</i>
-                    <li>Maintaining security compliance through patch updates and proactive maintenance.</i>
-                    <li>Managing client and team deadlines, consistently delivering reliable service without compromising quality.</i>
-                    <li>Offering guidance to team members and prioritizing personal development in IT.</i>
-                    <li>Reviewing and updating client and internal documentation, while providing training to infrastructure team members.</i>
-                     <li>Communicating effectively with clients, stakeholders, and team members to manage expectations and provide progress updates.</i>
-                     <li>Ensuring accurate asset management of client assets in internal systems.</i>
-                     </ul>
-
-                </div> <!-- end resume-block -->
-
-                <div class="resume-block">
-
-                    <div class="resume-block__header">
-                        <h4 class="h3">Excel Serv Solutions</h4>
-                        <p class="resume-block__header-meta">
-                            <span>Information Technology Systems Analyst</span> 
-                            <span class="resume-block__header-date">
-                                August 2019 - October 2022
-                            </span>
-                        </p>
-                    </div>
-                    <p>
-                       Excell Serv Solutions is a family-owned business based in Western Australia, specializing in fuel and retail services. With multiple service station franchises across WA and Victoria, Excell is dedicated to driving innovation within the petrol and convenience industry. After acquiring several businesses, the company faced challenges with integrating diverse systems, which led to my role as an IT Systems Analyst. I was tasked with evaluating and standardizing these systems while managing daily IT operations.
-                    </p> 
-                     <p>Key responsibilities:</p> 
-                        <ul>
-                         <li>Gathering requirements for various POS systems and integrating them with Forecourt equipment.</li>
-                         <li>Documenting processes and creating training materials for end-users.</li> 
-                         <li>Migrating email and productivity tools to SAAS (Office 365). </li> 
-                         <li>Advocating for and driving the adoption of Cloud solutions, particularly Microsoft Azure. </li> 
-                        
-                        </ul>
- <p>This role allowed me to not only solve complex IT challenges but also contribute to the company’s digital transformation journey.</p> 
-                </div> <!-- end resume-block -->
-
-
-                <div class="resume-block">
-
-                    <div class="resume-block__header">
-                        <h4 class="h3">Assa Abloy South Africa | IDS-INHEP Digital Security</h4>
-                        <p class="resume-block__header-meta">
-                            <span>IT Systems & Network Administrator</span> 
-                            <span class="resume-block__header-date">
-                                September 2014 - July 2019
-                            </span>
-                        </p>
-                    </div>
-                    <p>
-                       IDS (Inhep Digital Security) is a leading provider of electronic security systems, offering solutions such as home alarms, digital surveillance, camera systems, and access control.</p><p> 
-
-                      In my role as an IT and Network Administrator at IDS, I was immersed in a fast-paced, ever-evolving environment where technology played a pivotal role in maintaining a competitive edge. I contributed to several high-impact projects, including server virtualization in on-premises data centers, networking initiatives, and major ERP upgrades and integrations, specifically with SAP Business One.
-                     </p> 
-                    <p> Key responsibilities:
-                    </p>
-                    <p>
-                        <ul>
-                        <li> Overseeing IT, network, and telecommunication systems across multiple sites  </li>
-                         <li>Managing a wide range of technologies, including Microsoft Server 2008-2016, Active Directory, RDP Services, File Servers, Application Servers, Print Servers, SQL Server, MySQL, VMware, Veeam backup, and Backup Exec. </li>
-                         <li> Supporting SAP Business One, the company-wide ERP system, including integrations with external and in-house applications.</li>
-                         <li>Administering internal network infrastructure, including LAN, WAN, Wi-Fi, network equipment, VLANs, routing, and MPLS. I also collaborated with network service providers and vendors for external connectivity and firewall management.</li>
-                         
-                        </ul> 
-                    <p>This role provided me with extensive experience in IT systems management and network infrastructure, along with hands-on involvement in key projects that supported the company’s continued growth and technological advancement.</p>
-                    </p>
-
-                </div> <!-- end resume-block -->
-
-            <div class="resume-block">
-
-                <div class="resume-block__header">
-                    <h4 class="h3">Virtual Logistics</h4>
-                    <p class="resume-block__header-meta">
-                        <span>Information Technology Manager</span> 
-                        <span class="resume-block__header-date">
-                            October 2010 - September 2014
-                        </span>
-                    </p>
-                </div>
-                <p>Virtual Logistics is a specialized provider of supply chain services, offering national and cross-border transportation solutions, including warehousing, e-commerce, bulk loads, retail deliveries, and fleet management. The company caters to industries such as pharmaceuticals, medical, and other time-sensitive sectors.</p>
-                <p>As IT Manager at Virtual Logistics, I joined the company during a period of rapid growth, which allowed me to contribute to significant infrastructure projects and develop professionally. I played a key role in establishing new branches, collaborating with a development firm to implement a new freight management system, and rolling out an EDI system to improve customer interactions. </p>
-              
-                <p> Key responsibilities:
-                    </p>
-                <p>
-                    <ul>
-                        <li>Managing and supporting IT systems across multiple branches, resolving day-to-day IT issues. </li>
-                         <li>Overseeing server and network infrastructure to ensure seamless operations.</li>
-                         <li>Maintaining Active Directory and group policies, ensuring a clean and secure environment. </li>
-                         <li>Managing Terminal Services, Exchange, Active Directory, telephone systems, backups, scheduled maintenance, DRP testing, security cameras, alarm systems, access control, generators, and UPS systems. </li>
-                         <li>Collaborating with suppliers to manage hardware and software procurement, including equipment and licenses. 
-                        <li>Coordinating with third parties and vendors to handle warranty repairs, software assurance, and maintain the IT asset register</li>    
-                        <li>Ensuring the smooth operation of the external EDI in-house system for customer communications. </li>
-                         
-                         
-                </p>
-<p>This role provided hands-on experience in IT management across a rapidly expanding organization, allowing me to contribute to strategic projects and enhance overall system efficiency and reliability.</p>
-            </div> <!-- end resume-block -->
-
-        <div class="resume-block">
-            <div class="resume-block__header">
-                <h4 class="h3">Bytes Technology Group</h4>
-                <p class="resume-block__header-meta">
-                    <span>Customer Support Engineer</span> 
-                    <span class="resume-block__header-date">
-                        November 2006 - July 2010
-                    </span>
-                </p>
-            </div>
-            <p>Altron, formerly known as Bytes Technology Group, is a leading provider of IT services, including consulting, software, outsourcing, and systems integration. The company supports clients across South Africa with a range of innovative technology solutions. </p>
-            <p>As a Customer Support Engineer within the Managed Services department at Bytes, I was responsible for providing IT services to retail and banking clients, including managing partnerships and contracts with Dell South Africa and HP. My role required both collaboration with my team and independent management of a client base, fostering strong relationships with clients, vendors, and internal teams. I also served as a key support resource for the Engen Service Stations Group, providing Level 3 support.</p>
-           <p>Key responsibilities included:</p>
-            
-            <p>
-                <ul>
-                <li>Delivering general and ad hoc IT services to clients, specializing in POS systems and fuel service station domains. </li>
-                 <li>Managing planned maintenance, new site installations, and de-installation of leased equipment.</li>
-                 <li>Performing Dell onsite warranty repairs and replacements. </li>
-                 <li>Participating in site joint responses where clients required support from multiple vendors.</li>
-                 
-                </ul>
-            </p>
-<p>This role gave me valuable experience in customer service, IT support, and vendor management while enhancing my ability to navigate complex client needs and deliver effective solutions.</p>
-        </div> <!-- end resume-block -->
-
-        <div class="resume-block">
-        <div class="resume-block__header">
-            <h4 class="h3">CEB Maintenance Africa (Acquired by Business Connection-BCX )</h4>
-            <p class="resume-block__header-meta">
-                <span>Customer Engineer/Field Engineer</span> 
-                <span class="resume-block__header-date">
-                    May 2004 - November 2006
-                </span>
-            </p>
-        </div>
-<p>CEB Maintenance Africa is a leading IT Managed Services company specializing in the retail point-of-sale (POS) sector. They support numerous retail chains across South Africa and the African continent, providing tailored IT solutions to meet the unique needs of the industry. </p> 
-<p>I initially joined CEB as part of the projects team, where I played a key role in managing and executing parallel projects such as equipment end-of-life rollouts, mass software and OS upgrades, asset management, and scheduled preventative maintenance. I later transitioned to the service department as a Field Services Engineer, where I engaged directly with customers, troubleshooting and repairing both POS and back-office equipment. This experience helped solidify the foundation of my IT career and allowed me to develop both technical expertise and valuable soft skills, including prioritization and time management. 
-</p>
-       <p>Key responsibilities included:</p>
-            
-            <p>
-            <ul>
-            <li> Installing and repairing a wide range of POS hardware and software systems. </li>
-             <li>Providing customer support via phone and onsite visits to resolve technical issues. </li>
-             <li> Managing administrative duties such as stock control, daily, weekly, and monthly reporting, and standby duties.</li>
-             <li>Regularly communicating with call center agents, supervisors, and management to plan, report on incidents, and ensure SLA compliance and escalation management.</li>
-            </ul>
+    <!-- hero -->
+    <section class="hero" aria-label="Introduction">
+      <div class="container">
+        <h1>Llewellyn Booth</h1>
+        <p class="lede">
+          <strong>Infrastructure&nbsp;Engineer</strong> &mdash; Azure Cloud, hybrid infrastructure
+          (Azure&nbsp;Local&nbsp;/&nbsp;HCI, VMware, Hyper-V) and networking. 20+&nbsp;years across
+          managed services and enterprise IT.
         </p>
-<p>This role allowed me to gain extensive hands-on experience in IT support while developing critical interpersonal and organizational skills to enhance my overall professional growth.</p>
-       </div> <!-- end resume-block -->
-        </div> <!-- s-resume__section -->
-
-
-        <div class="row s-resume__section">
-            <div class="column large-3 tab-12">
-                <h3 class="section-header-allcaps">Education</h3>
-            </div>
-            <div class="column large-9 tab-12">
-                <div class="resume-block">
-
-                    <div class="resume-block__header">
-                        <h4 class="h3">Management College of Southern Africa</h4>
-                        <p class="resume-block__header-meta">
-                            <span>B.Com Degree in Information and Technology Management </span> 
-                            <span class="resume-block__header-date">
-                                June 2019
-                            </span>
-                        </p>
-                    </div>
-
-                    
-                 <!-- end resume-block -->
-
-                <div class="resume-block">
-
-                    <div class="resume-block__header">
-                        <h4 class="h3">Damelin </h4>
-                        <p class="resume-block__header-meta">
-                            <span>Diploma in PC Engineering</span>   
-                            <span class="resume-block__header-date">
-                                December 2003
-                            </span>
-                        </p>
-                    </div>
-
-                   
-                </div> <!-- end resume-block -->
-            </div>
-        </div> <!-- s-resume__section -->
-            
-       
-    </section> <!-- end s-resume -->
-
-
-    <!-- Certifications
-    ================================================== -->
-    <section id="portfolio" class="s-portfolio target-section">
-
-        <div class="row s-portfolio__header">
-            <div class="column large-12">
-                <h3>Current & Active Certifications</h3>
-            </div>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#contact">Get in touch</a>
+          <a class="btn btn--ghost" href="https://1drv.ms/w/c/38a387b5d46735f6/IQP2NWfUtYejIIA40gAAAAAAAUdLHIie0kQ5iDVtc8II4xU?download=1">Download résumé (PDF)</a>
         </div>
-
-        <div class="row collapse block-large-1-3 block-medium-1-3 block-tab-1-2 block-500-stack folio-list">
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="ecfffb2e-4ac7-4f5e-bb48-057502a086f6" data-share-badge-host="https://www.credly.com"></div>
-                </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="f2bee1d6-f05c-4512-a9f5-25936e4692b4" data-share-badge-host="https://www.credly.com"></div>
-                </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="3f6c1a62-c170-4345-ad16-b5a6a81f08ba" data-share-badge-host="https://www.credly.com"></div>
-                 </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="c984ee72-5793-4649-bebd-441246007393" data-share-badge-host="https://www.credly.com"></div>
-                 </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="8ff19170-0fbe-473b-9d81-f3cd699c0b4e" data-share-badge-host="https://www.credly.com"></div>
-                 </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="b38231dd-12a8-4000-b106-da4fd8e0159b" data-share-badge-host="https://www.credly.com"></div>
-                 </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="4668eb35-6662-4b77-99d9-98afc15aef20" data-share-badge-host="https://www.credly.com"></div>
-                </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                 <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="7ee8cdb5-54e9-4805-8e24-5354920ffad4" data-share-badge-host="https://www.credly.com"></div>
-                </div> <!-- end folio-item -->
-
-           <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="dd67ae92-dbf5-43f4-bd57-50c7b17e1d56" data-share-badge-host="https://www.credly.com"></div>
-                </div> <!-- end folio-item -->
-    
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="9151b780-74da-4e16-865f-0c14a4ff242c" data-share-badge-host="https://www.credly.com"></div>
-                  </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="864681c3-fc3c-426e-9dec-22bd910a3ef8" data-share-badge-host="https://www.credly.com"></div>
-                 </div> <!-- end folio-item -->
-
-            <div class="column folio-item">
-                <div data-iframe-width="600" data-iframe-height="250" data-share-badge-id="4a9bbf89-f42b-426f-be56-731275907a6a" data-share-badge-host="https://www.credly.com"></div>
-               
-</div> <!-- end folio-item -->
-
-        </div> <!-- end folio-list -->
-
-
-        <!-- Modal Templates Popup
-        =========================================================== -->
-        <div id="modal-01" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-droplet.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Droplet</h5>
-                    <p>Odio soluta enim quos sit asperiores rerum rerum repudiandae cum. Vel voluptatem alias qui assumenda iure et expedita voluptatem. Ratione officiis quae.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Branding</li>
-                        <li>Product Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-02" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-lamp.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>The Lamp</h5>
-                    <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Branding</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-03" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-minimalismo.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Minimalismo</h5>
-                    <p>Exercitationem reprehenderit quod explicabo consequatur aliquid ut magni ut. Deleniti quo corrupti illum velit eveniet ratione necessitatibus ipsam mollitia.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Product Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-04" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-shutterbug.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Shutterbug</h5>
-                    <p>Dolores velit qui quos nobis. Aliquam delectus voluptas quos possimus non voluptatem voluptas voluptas. Est doloribus eligendi porro doloribus voluptatum.</p>
-                    <ul class="modal-popup__cat">
-                        <li>E-Commerce</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-05" hidden>
-            <div class="modal-popup">
-
-                <img src="images/portfolio/gallery/g-fuji.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Fuji</h5>
-                    <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Product Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-06" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-skaterboy.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Skaterboy</h5>
-                    <p>Quisquam vel libero consequuntur autem voluptas. Qui aut vero. Omnis fugit mollitia cupiditate voluptas. Aenean sollicitudin, lorem quis bibendum auctor.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Branding</li>
-                        <li>Product Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-07" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-rucksack.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Rucksack</h5>
-                    <p>Odio soluta enim quos sit asperiores rerum rerum repudiandae cum. Vel voluptatem alias qui assumenda iure et expedita voluptatem. Ratione officiis quae.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Branding</li>
-                        <li>Product Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-        <div id="modal-08" hidden>
-            <div class="modal-popup">
-                <img src="images/portfolio/gallery/g-sanddunes.jpg" alt="" />
-    
-                <div class="modal-popup__desc">
-                    <h5>Sand Dunes</h5>
-                    <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit.</p>
-                    <ul class="modal-popup__cat">
-                        <li>Web Design</li>
-                    </ul>
-                </div>
-    
-                <a href="https://www.behance.net/" class="modal-popup__details">Project link</a>
-            </div>
-        </div> <!-- end modal -->
-
-
-    </section> <!-- end s-portfolio -->
-
-
-
-
-   
-    
-
-    <!-- footer
-    ================================================== -->
-    <footer class="s-footer">
-        <div class="row">
-            <div class="column large-4 medium-6 w-1000-stack s-footer__social-block">
-                <ul class="s-footer__social">
-                   <li><a href="https://linkedin.com/in/llewellyn-booth"target="_blank"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-                   <li><a href="https://github.com/llewellynbooth"target="_blank"><i class="fab fa-github" aria-hidden="true"></i></a></li>
-                   <li></li> <a href="https://twitter.com/LlewellynXBooth"target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                    
-                </ul>
-            </div>
-            <script type="text/javascript"> //<![CDATA[
-                var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
-                document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
-              //]]></script>
-              <script language="JavaScript" type="text/javascript">
-                TrustLogo("https://www.positivessl.com/images/seals/positivessl_trust_seal_md_167x42.png", "POSDV", "none");
-              </script>
-           
+        <div class="social">
+          <a href="https://www.linkedin.com/in/llewellyn-booth" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.02 2 2 0 0 1 4 .02zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg>
+          </a>
+          <a href="https://github.com/llewellynbooth" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.68.92.68 1.85V21c0 .27.16.59.67.5A10 10 0 0 0 12 2z"/></svg>
+          </a>
+          <a href="https://twitter.com/LlewellynXBooth" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.24 2H21l-6.55 7.48L22.5 22h-6.03l-4.72-6.17L6.34 22H3.58l7.02-8.02L2 2h6.18l4.27 5.64L18.24 2zm-1.06 18h1.67L7.9 3.9H6.11L17.18 20z"/></svg>
+          </a>
         </div>
+        <p class="viewcount">This page has been viewed <strong id="counter">&hellip;</strong> times.</p>
+      </div>
+    </section>
 
-        <div class="ss-go-top">
-            <a class="smoothscroll" title="Back to Top" href="#top">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 4h12v2H6zm5 10v6h2v-6h5l-6-6-6 6z"/></svg>
-             </a>
-             
-        </div> <!-- end ss-go-top -->
-    </footer>
+    <!-- about -->
+    <section id="about" aria-labelledby="about-h">
+      <div class="container">
+        <p class="section-eyebrow">About</p>
+        <h2 id="about-h">Who I am</h2>
+        <div class="about-grid">
+          <img src="images/me.png" alt="Llewellyn Booth" width="220" loading="lazy">
+          <div class="prose">
+            <p>
+              I design, build and run IT infrastructure that businesses depend on &mdash; hybrid
+              environments (Azure Local / HCI, VMware, Hyper-V), Windows Server, Azure Cloud, and
+              networking with a focus on SD-WAN (Cisco Meraki). Across two decades I've delivered
+              scalable, reliable systems and led the operational side of large migrations.
+            </p>
+            <p>
+              I like the hard problems: performance tuning, untangling cross-environment
+              integrations, and getting to a real root cause rather than a plausible one. I work
+              well solo or embedded in a cross-functional team.
+            </p>
+            <p>
+              Outside of client work I'm continually building &mdash; a home lab for hybrid
+              automation, certification study, and projects like this site.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- experience -->
+    <section id="experience" aria-labelledby="exp-h">
+      <div class="container">
+        <p class="section-eyebrow">Experience</p>
+        <h2 id="exp-h">Career</h2>
+        <ol class="timeline reveal">
 
-    <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode" title="Toggle dark mode">
-        <span aria-hidden="true">🌓</span>
-    </button>
+          <li>
+            <div class="job-head">
+              <h3>Orro Group</h3>
+              <span class="job-role">Cloud Infrastructure Engineer</span>
+              <span class="job-date">Jul 2024 &ndash; present</span>
+            </div>
+            <p>
+              Tier&nbsp;1 technology partner across AU, NZ, UK and the Philippines &mdash;
+              cybersecurity, cloud infrastructure and critical-infrastructure services. Joined the
+              Cloud Infrastructure team after Orro's acquisition of NW Computing, working with
+              enterprise clients including Qantas and Australia Post.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>Cloud platform management and monitoring, focused on Azure and Cisco Meraki.</li>
+                <li>Provisioning cloud infrastructure &mdash; VMs, storage, networking, load balancers, databases &mdash; to business requirements.</li>
+                <li>Cost optimisation through usage analysis and right-sizing.</li>
+                <li>Cloud migration strategy and execution, on-premises to Azure.</li>
+                <li>Presales support as an Azure subject-matter expert.</li>
+                <li>Ad-hoc project delivery with the PMO during peak periods.</li>
+              </ul>
+            </details>
+          </li>
 
-    <!-- Java Script
-    ================================================== -->
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
+          <li>
+            <div class="job-head">
+              <h3>NW Computing</h3>
+              <span class="job-role">Systems Engineer (NetOps)</span>
+              <span class="job-date">Oct 2022 &ndash; Jul 2024</span>
+            </div>
+            <p>
+              Melbourne-based cloud and managed-services provider with a national footprint and
+              strong Microsoft and Cisco Meraki practices. Part of a close-knit Systems
+              Infrastructure team handling monitoring, maintenance, high-priority escalations and
+              project work.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>Primary contact for the Network Operations team and high-priority Service Desk incidents.</li>
+                <li>Management, monitoring and maintenance of network and server infrastructure.</li>
+                <li>Security compliance via patching and proactive maintenance.</li>
+                <li>Delivery against client and team deadlines without compromising quality.</li>
+                <li>Mentoring team members; reviewing and maintaining client and internal documentation.</li>
+                <li>Stakeholder communication and accurate asset management.</li>
+              </ul>
+            </details>
+          </li>
+
+          <li>
+            <div class="job-head">
+              <h3>Excell Serv Solutions</h3>
+              <span class="job-role">IT Systems Analyst</span>
+              <span class="job-date">Aug 2019 &ndash; Oct 2022</span>
+            </div>
+            <p>
+              Family-owned fuel and retail group (WA and Victoria). Brought in to evaluate and
+              standardise the mix of systems inherited through acquisitions while running
+              day-to-day IT operations.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>Requirements gathering for POS systems and forecourt-equipment integration.</li>
+                <li>Process documentation and end-user training materials.</li>
+                <li>Migration of email and productivity tooling to Microsoft 365.</li>
+                <li>Driving adoption of cloud, particularly Microsoft Azure.</li>
+              </ul>
+            </details>
+          </li>
+
+          <li>
+            <div class="job-head">
+              <h3>ASSA ABLOY South Africa &mdash; IDS (Inhep Digital Security)</h3>
+              <span class="job-role">IT Systems &amp; Network Administrator</span>
+              <span class="job-date">Sep 2014 &ndash; Jul 2019</span>
+            </div>
+            <p>
+              Electronic-security manufacturer (alarms, surveillance, access control). Ran IT,
+              network and telecoms across multiple sites and contributed to server virtualisation
+              and a major SAP Business One ERP upgrade.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>IT, network and telecommunications across multiple sites.</li>
+                <li>Windows Server 2008&ndash;2016, Active Directory, RDS, file/app/print servers, SQL Server, MySQL, VMware, Veeam, Backup Exec.</li>
+                <li>SAP Business One support and integrations with external and in-house applications.</li>
+                <li>LAN/WAN/Wi-Fi, VLANs, routing and MPLS; vendor and ISP coordination; firewall management.</li>
+              </ul>
+            </details>
+          </li>
+
+          <li>
+            <div class="job-head">
+              <h3>Virtual Logistics</h3>
+              <span class="job-role">IT Manager</span>
+              <span class="job-date">Oct 2010 &ndash; Sep 2014</span>
+            </div>
+            <p>
+              Supply-chain services provider (warehousing, e-commerce, retail delivery, fleet).
+              Joined during rapid growth; helped stand up new branches, a freight-management
+              system and an EDI integration for customer communications.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>IT systems and support across multiple branches.</li>
+                <li>Server and network infrastructure; Active Directory and Group Policy.</li>
+                <li>Terminal Services, Exchange, telephony, backups, DR testing, physical security and power.</li>
+                <li>Hardware/software procurement, licensing and vendor management; asset register.</li>
+              </ul>
+            </details>
+          </li>
+
+          <li>
+            <div class="job-head">
+              <h3>Bytes Technology Group (Altron)</h3>
+              <span class="job-role">Customer Support Engineer</span>
+              <span class="job-date">Nov 2006 &ndash; Jul 2010</span>
+            </div>
+            <p>
+              IT services group &mdash; consulting, software, outsourcing and systems integration.
+              Delivered managed services to retail and banking clients, including Level&nbsp;3
+              support for the Engen service-station group, under Dell and HP partnerships.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>General and ad-hoc IT services, specialising in POS and fuel-retail domains.</li>
+                <li>Planned maintenance, new-site installations, leased-equipment de-installation.</li>
+                <li>Dell onsite warranty repairs and replacements; multi-vendor joint responses.</li>
+              </ul>
+            </details>
+          </li>
+
+          <li>
+            <div class="job-head">
+              <h3>CEB Maintenance Africa (later BCX)</h3>
+              <span class="job-role">Customer / Field Engineer</span>
+              <span class="job-date">May 2004 &ndash; Nov 2006</span>
+            </div>
+            <p>
+              IT managed-services company in the retail POS sector. Started on the projects team
+              (EOL rollouts, mass OS upgrades, preventative maintenance), then moved to field
+              services troubleshooting POS and back-office equipment. Where my IT career began.
+            </p>
+            <details>
+              <summary>Key responsibilities</summary>
+              <ul>
+                <li>Installing and repairing POS hardware and software.</li>
+                <li>Phone and onsite customer support.</li>
+                <li>Stock control, reporting and standby duties; SLA and escalation management.</li>
+              </ul>
+            </details>
+          </li>
+
+        </ol>
+
+        <h3 style="margin:2.5rem 0 1rem">Education</h3>
+        <div class="cards">
+          <div class="card">
+            <h3>B.Com, Information &amp; Technology Management</h3>
+            <p class="muted">Management College of Southern Africa (MANCOSA) &middot; 2019</p>
+          </div>
+          <div class="card">
+            <h3>Diploma, PC Engineering</h3>
+            <p class="muted">Damelin &middot; 2003</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- certifications -->
+    <section id="certifications" aria-labelledby="cert-h">
+      <div class="container">
+        <p class="section-eyebrow">Certifications</p>
+        <h2 id="cert-h">Current &amp; active</h2>
+        <div class="cert-grid" id="cert-grid" data-lazy-credly>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="ecfffb2e-4ac7-4f5e-bb48-057502a086f6" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="f2bee1d6-f05c-4512-a9f5-25936e4692b4" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="3f6c1a62-c170-4345-ad16-b5a6a81f08ba" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="c984ee72-5793-4649-bebd-441246007393" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="8ff19170-0fbe-473b-9d81-f3cd699c0b4e" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="b38231dd-12a8-4000-b106-da4fd8e0159b" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="4668eb35-6662-4b77-99d9-98afc15aef20" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="7ee8cdb5-54e9-4805-8e24-5354920ffad4" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="dd67ae92-dbf5-43f4-bd57-50c7b17e1d56" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="9151b780-74da-4e16-865f-0c14a4ff242c" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="864681c3-fc3c-426e-9dec-22bd910a3ef8" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="600" data-iframe-height="270" data-share-badge-id="4a9bbf89-f42b-426f-be56-731275907a6a" data-share-badge-host="https://www.credly.com"></div>
+        </div>
+        <a class="btn btn--ghost" href="https://www.credly.com/users/llewellyn-booth/badges" rel="noopener">View all on Credly</a>
+      </div>
+    </section>
+
+    <!-- contact -->
+    <section id="contact" aria-labelledby="contact-h">
+      <div class="container">
+        <p class="section-eyebrow">Contact</p>
+        <h2 id="contact-h">Get in touch</h2>
+        <div class="contact-grid">
+          <form id="contact-form" novalidate>
+            <div class="form-row">
+              <label for="cf-name">Name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+            </div>
+            <div class="form-row">
+              <label for="cf-email">Email</label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" required>
+            </div>
+            <div class="form-row">
+              <label for="cf-subject">Subject <span class="muted">(optional)</span></label>
+              <input id="cf-subject" name="subject" type="text" maxlength="150">
+            </div>
+            <div class="form-row">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" maxlength="5000" required></textarea>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="cf-website">Leave this field empty</label>
+              <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <button class="btn btn--primary" type="submit" id="cf-submit">Send message</button>
+            <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <div>
+            <p>Prefer email or socials?</p>
+            <ul class="contact-links">
+              <li><a href="mailto:llewellynbooth1@gmail.com">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                llewellynbooth1@gmail.com</a></li>
+              <li><a href="https://www.linkedin.com/in/llewellyn-booth">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.02 2 2 0 0 1 4 .02zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg>
+                linkedin.com/in/llewellyn-booth</a></li>
+              <li><a href="https://github.com/llewellynbooth">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.68.92.68 1.85V21c0 .27.16.59.67.5A10 10 0 0 0 12 2z"/></svg>
+                github.com/llewellynbooth</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year">2026</span> Llewellyn Booth</span>
+      <span>Static site on Azure &middot; <a href="https://github.com/llewellynbooth/my-Azure-Resume">source on GitHub</a></span>
+      <a href="#top">Back to top &uarr;</a>
+    </div>
+  </footer>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour theme" title="Toggle colour theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+
+  <script src="js/main.js"></script>
 </body>
-
 </html>
