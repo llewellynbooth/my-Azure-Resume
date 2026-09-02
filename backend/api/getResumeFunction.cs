@@ -1,7 +1,5 @@
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -9,35 +7,27 @@ namespace Company.Function;
 
 public class GetResumeFunction
 {
-    private readonly Container _counter;
+    private readonly CounterStore _counter;
     private readonly ILogger<GetResumeFunction> _logger;
 
-    public GetResumeFunction(CosmosClient cosmos, ILogger<GetResumeFunction> logger)
+    public GetResumeFunction(CounterStore counter, ILogger<GetResumeFunction> logger)
     {
-        _counter = cosmos.GetContainer("CloudResume", "Counter");
+        _counter = counter;
         _logger = logger;
     }
 
+    // GET returns the current count; POST increments it. (The site POSTs.)
     [Function("getResumeFunction")]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req,
+        CancellationToken ct)
     {
-        _logger.LogInformation("getResumeFunction triggered.");
+        var count = HttpMethods.IsPost(req.Method)
+            ? await _counter.IncrementAsync(ct)
+            : await _counter.GetAsync(ct);
 
-        Counter counter;
-        try
-        {
-            var read = await _counter.ReadItemAsync<Counter>("index", new PartitionKey("index"));
-            counter = read.Resource;
-        }
-        catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            counter = new Counter { Id = "index", Count = 0 };
-        }
+        _logger.LogInformation("getResumeFunction {Method} -> {Count}", req.Method, count);
 
-        counter.Count += 1;
-        await _counter.UpsertItemAsync(counter, new PartitionKey("index"));
-
-        return new OkObjectResult(counter);
+        return new OkObjectResult(new Counter { Id = Db.CounterId, Count = count });
     }
 }

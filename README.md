@@ -126,17 +126,18 @@ there is no state backend yet. Reconciling it is a tracked task; see
 
 ## Roadmap
 
-**Done** — Functions migrated to the .NET 8 **isolated worker** model; frontend + backend CI/CD
-on OIDC workload identity (no stored secrets); `dotnet test` gate before backend deploy;
-contact form hardened (length limits, regex email check, honeypot, output encoding); legacy
-vendored JS and committed build artifacts removed; Bicep retired.
+**Done** — Functions on the .NET 8 **isolated worker** model; frontend + backend CI/CD on OIDC
+workload identity (no stored secrets); `dotnet test` gate before deploy; **atomic** counter
+(`PatchItemAsync` increment) with GET read / POST write; contact form hardened (validation,
+honeypot, HTML-encoding, per-IP rate limit) and unit-tested; Cosmos access behind a small
+store layer; Cosmos key rotated; legacy vendored JS and committed build artifacts removed;
+Bicep retired.
 
 **Next**, roughly in priority order:
 
-- **Rotate credentials** — the repo is public; the historical hardcoded API key remains in git
-  history, so rotate the Cosmos key and any old service principal.
 - **Reconcile Terraform with the live estate** — rename resources in `main.tf` to match, stand
   up a state backend, `terraform import`, plan-to-zero, then re-add a CI workflow.
+- **Distributed rate limiting** for `/api/contact` — the current limiter is per-instance.
 - **Frontend rebuild.** Retire the remaining `plugins.js` bundle and the jQuery-era template.
 - **CDN → Front Door** (confirm whether the profile is already Front Door) + **custom domain +
   managed TLS**.

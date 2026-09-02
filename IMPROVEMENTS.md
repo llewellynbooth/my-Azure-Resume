@@ -2,6 +2,26 @@
 
 A record of significant changes to this project and why they were made. Newest first.
 
+## September 2026 — backend hardening
+
+- **Atomic visitor counter.** Replaced the read-modify-write (`ReadItem` → `+1` →
+  `UpsertItem`, which loses increments under concurrency) with `PatchItemAsync` +
+  `PatchOperation.Increment("/count", 1)` — a single atomic server-side operation.
+- **GET no longer mutates.** `getResumeFunction` now increments only on `POST`; `GET` returns
+  the current count. The site was updated to POST. Prefetchers, link scanners and the health
+  check no longer inflate the number.
+- **Real client IP.** Contact submissions recorded Azure's edge IP via
+  `Connection.RemoteIpAddress`; now the first hop of `X-Forwarded-For` (with the App Service
+  `:port` suffix stripped).
+- **Rate limiting on `/api/contact`.** Best-effort per-instance limit (5 per 10 min per IP,
+  `IMemoryCache`) returning `429`. A distributed limiter is a follow-up.
+- **Structure + testability.** Cosmos access moved behind `CounterStore` / `MessageStore`;
+  names centralised in `Db`; contact validation extracted to a pure `ContactValidator`
+  (honeypot / required / length / email-format / HTML-encoding) with **8 unit tests** — the
+  previous tests only exercised the `Counter` POCO.
+- **Housekeeping.** `CancellationToken` threaded through the Cosmos calls; added
+  `.github/dependabot.yml` (NuGet + Actions) and `.editorconfig`.
+
 ## September 2026 — currency pass
 
 Brought the runtime, tooling, and CI up to current practice.

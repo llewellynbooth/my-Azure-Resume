@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: "/backend/api"
+    schedule:
+      interval: weekly
+    groups:
+      functions-worker:
+        patterns:
+          - "Microsoft.Azure.Functions.Worker*"
+  - package-ecosystem: nuget
+    directory: "/backend/tests"
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

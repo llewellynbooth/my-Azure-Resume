@@ -20,8 +20,9 @@ const getVisitCount = () => {
         counterElement.setAttribute('aria-live', 'polite');
     }
 
+    // POST increments the counter; GET is read-only (so prefetchers/scanners don't inflate it).
     fetch(functionApiUrl, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Accept': 'application/json'
         }
