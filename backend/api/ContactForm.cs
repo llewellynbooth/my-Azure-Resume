@@ -88,7 +88,7 @@ public class ContactForm
         if (!string.IsNullOrWhiteSpace(data?.Website))
         {
             _logger.LogWarning("Contact form honeypot triggered; dropping submission.");
-            return new ContactResult { HttpResponse = Ok("Thanks — your message has been received.") };
+            return Ok("Thanks — your message has been received.");
         }
 
         var name = data?.Name?.Trim() ?? "";
@@ -119,16 +119,14 @@ public class ContactForm
 
         _logger.LogInformation("Contact message accepted from {Email}", contactMessage.Email);
 
-        return new ContactResult
-        {
-            Message = contactMessage,
-            HttpResponse = Ok("Thank you for your message! I'll get back to you soon.", contactMessage.Id)
-        };
+        var result = Ok("Thank you for your message! I'll get back to you soon.", contactMessage.Id);
+        result.Message = contactMessage;   // Cosmos output binding writes this document
+        return result;
     }
 
-    private static IActionResult Bad(string error) =>
-        new BadRequestObjectResult(new { error });
+    private static ContactResult Bad(string error) =>
+        new() { HttpResponse = new BadRequestObjectResult(new { error }) };
 
-    private static IActionResult Ok(string message, string? id = null) =>
-        new OkObjectResult(new { success = true, message, id });
+    private static ContactResult Ok(string message, string? id = null) =>
+        new() { HttpResponse = new OkObjectResult(new { success = true, message, id }) };
 }
