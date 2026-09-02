@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +34,7 @@ public class ContactMessage
     public string IpAddress { get; set; } = "unknown";
 }
 
-// Shape the client sends. Bound with camelCase / case-insensitive matching.
+// Shape the client sends. Bound case-insensitively.
 public class ContactRequest
 {
     public string? Name { get; set; }
@@ -41,14 +42,6 @@ public class ContactRequest
     public string? Subject { get; set; }
     public string? Message { get; set; }
     public string? Website { get; set; } // honeypot — real users leave this empty
-}
-
-public class ContactResult
-{
-    [CosmosDBOutput(databaseName: "CloudResume", containerName: "Messages", Connection = "CloudResume")]
-    public ContactMessage? Message { get; set; }
-
-    public IActionResult HttpResponse { get; set; } = new OkResult();
 }
 
 public class ContactForm
@@ -64,12 +57,17 @@ public class ContactForm
     private static readonly JsonSerializerOptions JsonOpts =
         new() { PropertyNameCaseInsensitive = true };
 
+    private readonly Container _messages;
     private readonly ILogger<ContactForm> _logger;
 
-    public ContactForm(ILogger<ContactForm> logger) => _logger = logger;
+    public ContactForm(CosmosClient cosmos, ILogger<ContactForm> logger)
+    {
+        _messages = cosmos.GetContainer("CloudResume", "Messages");
+        _logger = logger;
+    }
 
     [Function("ContactForm")]
-    public async Task<ContactResult> Run(
+    public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "contact")] HttpRequest req)
     {
         _logger.LogInformation("Contact form submission received.");
@@ -81,14 +79,14 @@ public class ContactForm
         }
         catch (JsonException)
         {
-            return Bad("Request body is not valid JSON.");
+            return new BadRequestObjectResult(new { error = "Request body is not valid JSON." });
         }
 
         // Honeypot: silently accept and drop bot submissions.
         if (!string.IsNullOrWhiteSpace(data?.Website))
         {
             _logger.LogWarning("Contact form honeypot triggered; dropping submission.");
-            return Ok("Thanks — your message has been received.");
+            return new OkObjectResult(new { success = true, message = "Thanks — your message has been received." });
         }
 
         var name = data?.Name?.Trim() ?? "";
@@ -97,14 +95,14 @@ public class ContactForm
         var message = data?.Message?.Trim() ?? "";
 
         if (name.Length == 0 || email.Length == 0 || message.Length == 0)
-            return Bad("Name, email, and message are required.");
+            return new BadRequestObjectResult(new { error = "Name, email, and message are required." });
 
         if (name.Length > NameMax || email.Length > EmailMax ||
             subject.Length > SubjectMax || message.Length > MessageMax)
-            return Bad("One or more fields exceed the allowed length.");
+            return new BadRequestObjectResult(new { error = "One or more fields exceed the allowed length." });
 
         if (!EmailPattern.IsMatch(email))
-            return Bad("Invalid email address.");
+            return new BadRequestObjectResult(new { error = "Invalid email address." });
 
         var contactMessage = new ContactMessage
         {
@@ -117,16 +115,14 @@ public class ContactForm
             IpAddress = req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"
         };
 
-        _logger.LogInformation("Contact message accepted from {Email}", contactMessage.Email);
+        await _messages.CreateItemAsync(contactMessage, new PartitionKey(contactMessage.Id));
+        _logger.LogInformation("Contact message stored from {Email}", contactMessage.Email);
 
-        var result = Ok("Thank you for your message! I'll get back to you soon.", contactMessage.Id);
-        result.Message = contactMessage;   // Cosmos output binding writes this document
-        return result;
+        return new OkObjectResult(new
+        {
+            success = true,
+            message = "Thank you for your message! I'll get back to you soon.",
+            id = contactMessage.Id
+        });
     }
-
-    private static ContactResult Bad(string error) =>
-        new() { HttpResponse = new BadRequestObjectResult(new { error }) };
-
-    private static ContactResult Ok(string message, string? id = null) =>
-        new() { HttpResponse = new OkObjectResult(new { success = true, message, id }) };
 }
