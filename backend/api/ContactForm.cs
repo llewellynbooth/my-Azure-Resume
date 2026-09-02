@@ -1,102 +1,134 @@
-using System;
-using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-namespace Company.Function
+namespace Company.Function;
+
+public class ContactMessage
 {
-    public class ContactMessage
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "";
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = "";
+
+    [JsonPropertyName("subject")]
+    public string Subject { get; set; } = "";
+
+    [JsonPropertyName("message")]
+    public string Message { get; set; } = "";
+
+    [JsonPropertyName("timestamp")]
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    [JsonPropertyName("ipAddress")]
+    public string IpAddress { get; set; } = "unknown";
+}
+
+// Shape the client sends. Bound with camelCase / case-insensitive matching.
+public class ContactRequest
+{
+    public string? Name { get; set; }
+    public string? Email { get; set; }
+    public string? Subject { get; set; }
+    public string? Message { get; set; }
+    public string? Website { get; set; } // honeypot — real users leave this empty
+}
+
+public class ContactResult
+{
+    [CosmosDBOutput(databaseName: "CloudResume", containerName: "Messages", Connection = "CloudResume")]
+    public ContactMessage? Message { get; set; }
+
+    public IActionResult HttpResponse { get; set; } = new OkResult();
+}
+
+public class ContactForm
+{
+    private const int NameMax = 100;
+    private const int EmailMax = 200;
+    private const int SubjectMax = 150;
+    private const int MessageMax = 5000;
+
+    private static readonly Regex EmailPattern =
+        new(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", RegexOptions.Compiled);
+
+    private static readonly JsonSerializerOptions JsonOpts =
+        new() { PropertyNameCaseInsensitive = true };
+
+    private readonly ILogger<ContactForm> _logger;
+
+    public ContactForm(ILogger<ContactForm> logger) => _logger = logger;
+
+    [Function("ContactForm")]
+    public async Task<ContactResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "contact")] HttpRequest req)
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        _logger.LogInformation("Contact form submission received.");
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("email")]
-        public string Email { get; set; }
-
-        [JsonProperty("subject")]
-        public string Subject { get; set; }
-
-        [JsonProperty("message")]
-        public string Message { get; set; }
-
-        [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
-
-        [JsonProperty("ipAddress")]
-        public string IpAddress { get; set; }
-    }
-
-    public static class ContactForm
-    {
-        [FunctionName("ContactForm")]
-        public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "contact")] HttpRequest req,
-            [CosmosDB(databaseName: "CloudResume", containerName: "Messages", Connection = "CloudResume")] IAsyncCollector<ContactMessage> messagesOut,
-            ILogger log)
+        ContactRequest? data;
+        try
         {
-            log.LogInformation("Contact form submission received.");
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            // Validation
-            if (data?.name == null || data?.email == null || data?.message == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                {
-                    Content = new StringContent("{\"error\":\"Name, email, and message are required.\"}", Encoding.UTF8, "application/json")
-                };
-            }
-
-            // Basic email validation
-            string email = data.email.ToString();
-            if (!email.Contains("@") || !email.Contains("."))
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                {
-                    Content = new StringContent("{\"error\":\"Invalid email address.\"}", Encoding.UTF8, "application/json")
-                };
-            }
-
-            // Create contact message
-            var contactMessage = new ContactMessage
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = data.name,
-                Email = email,
-                Subject = data.subject ?? "Contact Form Submission",
-                Message = data.message,
-                Timestamp = DateTime.UtcNow,
-                IpAddress = req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"
-            };
-
-            // Save to Cosmos DB
-            await messagesOut.AddAsync(contactMessage);
-
-            log.LogInformation($"Contact message saved from {contactMessage.Email}");
-
-            var response = new
-            {
-                success = true,
-                message = "Thank you for your message! I'll get back to you soon.",
-                id = contactMessage.Id
-            };
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json")
-            };
+            data = await JsonSerializer.DeserializeAsync<ContactRequest>(req.Body, JsonOpts);
         }
+        catch (JsonException)
+        {
+            return Bad("Request body is not valid JSON.");
+        }
+
+        // Honeypot: silently accept and drop bot submissions.
+        if (!string.IsNullOrWhiteSpace(data?.Website))
+        {
+            _logger.LogWarning("Contact form honeypot triggered; dropping submission.");
+            return new ContactResult { HttpResponse = Ok("Thanks — your message has been received.") };
+        }
+
+        var name = data?.Name?.Trim() ?? "";
+        var email = data?.Email?.Trim() ?? "";
+        var subject = string.IsNullOrWhiteSpace(data?.Subject) ? "Contact form submission" : data!.Subject!.Trim();
+        var message = data?.Message?.Trim() ?? "";
+
+        if (name.Length == 0 || email.Length == 0 || message.Length == 0)
+            return Bad("Name, email, and message are required.");
+
+        if (name.Length > NameMax || email.Length > EmailMax ||
+            subject.Length > SubjectMax || message.Length > MessageMax)
+            return Bad("One or more fields exceed the allowed length.");
+
+        if (!EmailPattern.IsMatch(email))
+            return Bad("Invalid email address.");
+
+        var contactMessage = new ContactMessage
+        {
+            // HTML-encode stored text so it is inert if ever rendered in an admin view.
+            Name = WebUtility.HtmlEncode(name),
+            Email = WebUtility.HtmlEncode(email),
+            Subject = WebUtility.HtmlEncode(subject),
+            Message = WebUtility.HtmlEncode(message),
+            Timestamp = DateTime.UtcNow,
+            IpAddress = req.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"
+        };
+
+        _logger.LogInformation("Contact message accepted from {Email}", contactMessage.Email);
+
+        return new ContactResult
+        {
+            Message = contactMessage,
+            HttpResponse = Ok("Thank you for your message! I'll get back to you soon.", contactMessage.Id)
+        };
     }
+
+    private static IActionResult Bad(string error) =>
+        new BadRequestObjectResult(new { error });
+
+    private static IActionResult Ok(string message, string? id = null) =>
+        new OkObjectResult(new { success = true, message, id });
 }

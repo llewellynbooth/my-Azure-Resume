@@ -12,16 +12,21 @@ on:
       - main
     paths:
       - 'infrastructure/**'
+      - '.github/workflows/terraform.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
-  id-token: write
+  id-token: write   # OIDC federated login to Azure
 
 env:
-  TERRAFORM_VERSION: '1.6.6'
+  TERRAFORM_VERSION: '1.9.8'
   WORKING_DIRECTORY: './infrastructure'
+  ARM_USE_OIDC: 'true'
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 jobs:
   terraform-plan:
@@ -43,17 +48,19 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      - name: Azure Login
-        uses: azure/login@v1
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Get Function App Name
+      - name: Resolve Function App name
         id: get-function-name
         run: |
-          FUNCTION_APP=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
-          echo "function_app_name=$FUNCTION_APP" >> $GITHUB_OUTPUT
-          echo "Found function app: $FUNCTION_APP"
+          name=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
+          echo "function_app_name=$name" >> "$GITHUB_OUTPUT"
+          echo "Found function app: $name"
 
       - name: Create terraform.tfvars
         run: |
@@ -75,11 +82,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       - name: Terraform Validate
         id: validate
@@ -88,11 +90,6 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         continue-on-error: true
 
       - name: Upload Plan
@@ -110,10 +107,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            const output = `#### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization \`${{ steps.init.outcome }}\`
+            #### Terraform Validation \`${{ steps.validate.outcome }}\`
+            #### Terraform Plan \`${{ steps.plan.outcome }}\`
 
             <details><summary>Show Plan</summary>
 
@@ -161,17 +158,19 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      - name: Azure Login
-        uses: azure/login@v1
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Get Function App Name
+      - name: Resolve Function App name
         id: get-function-name
         run: |
-          FUNCTION_APP=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
-          echo "function_app_name=$FUNCTION_APP" >> $GITHUB_OUTPUT
-          echo "Found function app: $FUNCTION_APP"
+          name=$(az functionapp list --resource-group azureresume-rg --query "[0].name" -o tsv)
+          echo "function_app_name=$name" >> "$GITHUB_OUTPUT"
+          echo "Found function app: $name"
 
       - name: Create terraform.tfvars
         run: |
@@ -187,11 +186,6 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       - name: Download Plan
         uses: actions/download-artifact@v4
@@ -201,11 +195,6 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       - name: Azure Logout
         if: always()

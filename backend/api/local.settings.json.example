@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "CloudResume": "AccountEndpoint=https://<your-cosmos>.documents.azure.com:443/;AccountKey=<key>;"
+  },
+  "Host": {
+    "CORS": "*"
+  }
+}

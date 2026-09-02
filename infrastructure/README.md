@@ -2,7 +2,8 @@
 
 This directory contains Terraform configuration to deploy the entire Azure Resume infrastructure.
 
-> **Note**: This project was migrated from Azure Bicep to Terraform. The `main.bicep` file is kept for reference and rollback capability.
+> This project originally used Azure Bicep; it was migrated to Terraform. The Bicep template
+> has been removed — it remains in git history if you need to refer back to it.
 
 ## Resources Deployed
 
@@ -14,10 +15,11 @@ This directory contains Terraform configuration to deploy the entire Azure Resum
 
 ## Prerequisites
 
-- [Terraform](https://www.terraform.io/downloads) >= 1.6.0 installed
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed
+- [Terraform](https://www.terraform.io/downloads) >= 1.9.0 installed
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed
 - Azure subscription with appropriate permissions
 - Resource group `azureresume-rg` already created
+- For local runs, export `ARM_SUBSCRIPTION_ID` (azurerm v4 requires it explicitly)
 
 ## File Structure
 
@@ -26,7 +28,6 @@ infrastructure/
 ├── main.tf                # All Terraform resources and configuration
 ├── terraform.tfvars       # Variable values (not committed to git)
 ├── import-resources.sh    # Automated import script
-├── main.bicep             # Legacy Bicep template (for reference)
 └── README.md              # This file
 ```
 
@@ -226,29 +227,60 @@ Infrastructure deployment is automated via GitHub Actions:
 - **Push to main**: Runs `terraform apply` to deploy changes
 - **Manual**: Can be triggered via workflow_dispatch
 
-### Required GitHub Secrets
+### Authentication — OIDC (no stored secrets)
 
-Add these in your repository: Settings → Secrets and variables → Actions
+All three workflows authenticate to Azure with **workload identity federation** (OIDC).
+There is no service-principal secret in the repo.
 
-1. **AZURE_CREDENTIALS** - Service principal JSON (already configured)
-2. **ARM_CLIENT_ID** - Extract from AZURE_CREDENTIALS `clientId`
-3. **ARM_CLIENT_SECRET** - Extract from AZURE_CREDENTIALS `clientSecret`
-4. **ARM_SUBSCRIPTION_ID** - Extract from AZURE_CREDENTIALS `subscriptionId`
-5. **ARM_TENANT_ID** - Extract from AZURE_CREDENTIALS `tenantId`
+**Required GitHub secrets** (Settings → Secrets and variables → Actions):
 
-### Create Service Principal (if needed)
+| Secret | Value |
+|---|---|
+| `AZURE_CLIENT_ID` | App registration (client) ID |
+| `AZURE_TENANT_ID` | Entra tenant ID |
+| `AZURE_SUBSCRIPTION_ID` | Target subscription ID |
+
+**One-time setup:**
 
 ```bash
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 
-az ad sp create-for-rbac \
-  --name "github-actions-azureresume-terraform" \
-  --role contributor \
-  --scopes /subscriptions/$SUBSCRIPTION_ID/resourceGroups/azureresume-rg /subscriptions/$SUBSCRIPTION_ID/resourceGroups/terraform-state-rg \
-  --sdk-auth
+# 1. App registration + service principal (no client secret)
+APP_ID=$(az ad app create --display-name "github-actions-azureresume" --query appId -o tsv)
+az ad sp create --id "$APP_ID"
+
+# 2. RBAC — Contributor on both resource groups, plus Storage Blob Data Contributor
+#    on the frontend storage account for keyless blob upload
+az role assignment create --assignee "$APP_ID" --role Contributor \
+  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/azureresume-rg
+az role assignment create --assignee "$APP_ID" --role Contributor \
+  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/terraform-state-rg
+az role assignment create --assignee "$APP_ID" --role "Storage Blob Data Contributor" \
+  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/azureresume-rg/providers/Microsoft.Storage/storageAccounts/resumestore100
+
+# 3. Federated credentials — one per (repo, subject). Add branch + PR + environment as needed.
+az ad app federated-credential create --id "$APP_ID" --parameters '{
+  "name": "github-main",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:llewellynbooth/my-Azure-Resume:ref:refs/heads/main",
+  "audiences": ["api://AzureADTokenExchange"]
+}'
+az ad app federated-credential create --id "$APP_ID" --parameters '{
+  "name": "github-pr",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:llewellynbooth/my-Azure-Resume:pull_request",
+  "audiences": ["api://AzureADTokenExchange"]
+}'
+az ad app federated-credential create --id "$APP_ID" --parameters '{
+  "name": "github-env-production",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:llewellynbooth/my-Azure-Resume:environment:production",
+  "audiences": ["api://AzureADTokenExchange"]
+}'
 ```
 
-Copy the JSON output to `AZURE_CREDENTIALS` secret and extract individual values for the ARM_* secrets.
+Terraform picks up OIDC via `ARM_USE_OIDC=true` + `ARM_CLIENT_ID` / `ARM_TENANT_ID` /
+`ARM_SUBSCRIPTION_ID`, which the workflow sets from the secrets above.
 
 ## Troubleshooting
 
@@ -257,7 +289,7 @@ Copy the JSON output to `AZURE_CREDENTIALS` secret and extract individual values
 **Solution**: Your `main.tf` configuration doesn't match the existing resource. Common fixes:
 
 1. Check resource names match exactly
-2. Verify free tier settings (`enable_free_tier = true` for Cosmos DB)
+2. Verify free tier settings (`free_tier_enabled = true` for Cosmos DB — azurerm v4 name)
 3. Compare with Azure Portal settings
 4. Adjust `main.tf` to match existing configuration exactly
 
@@ -291,21 +323,6 @@ az storage blob service-properties update \
   --static-website \
   --index-document index.html \
   --404-document 404.html
-```
-
-## Rollback to Bicep (Emergency)
-
-If you need to rollback to Bicep:
-
-```bash
-# Remove all resources from Terraform state
-terraform state list | xargs -n1 terraform state rm
-
-# Redeploy with Bicep
-az deployment group create \
-  --resource-group azureresume-rg \
-  --template-file main.bicep \
-  --parameters location=australiaeast environment=prod
 ```
 
 ## Clean Up

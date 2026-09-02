@@ -1,40 +1,48 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 
+namespace Company.Function;
 
-namespace Company.Function
+public class GetResumeFunction
 {
-    public static class getResumeFunction
+    private readonly ILogger<GetResumeFunction> _logger;
+
+    public GetResumeFunction(ILogger<GetResumeFunction> logger) => _logger = logger;
+
+    // Reads the single "index" counter document, increments it, and upserts it back
+    // via the Cosmos output binding on the response object.
+    [Function("getResumeFunction")]
+    public CounterResponse Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req,
+        [CosmosDBInput(
+            databaseName: "CloudResume",
+            containerName: "Counter",
+            Connection = "CloudResume",
+            Id = "index",
+            PartitionKey = "index")] Counter counter)
     {
-        [FunctionName("getResumeFunction")]
-        public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            [CosmosDB(databaseName: "CloudResume", containerName: "Counter", Connection = "CloudResume", Id = "index", PartitionKey = "index")] Counter counter,
-            [CosmosDB(databaseName: "CloudResume", containerName: "Counter", Connection = "CloudResume", Id = "index", PartitionKey = "index")] out Counter updatedCounter,
-             ILogger log)
+        _logger.LogInformation("getResumeFunction triggered.");
+
+        counter.Count += 1;
+
+        return new CounterResponse
         {
-            log.LogInformation("GetResumeCounter was Triggered.");
-
-            updatedCounter = counter;
-            updatedCounter.Count += 1;
-
-            var jsonToReturn = JsonConvert.SerializeObject(updatedCounter); 
-            
-            return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
-
-            {
-                Content = new StringContent(jsonToReturn, Encoding.UTF8,"Application/json")
-            };
-        }
+            UpdatedCounter = counter,
+            HttpResponse = new OkObjectResult(counter)
+        };
     }
+}
+
+public class CounterResponse
+{
+    [CosmosDBOutput(
+        databaseName: "CloudResume",
+        containerName: "Counter",
+        Connection = "CloudResume")]
+    public Counter? UpdatedCounter { get; set; }
+
+    public IActionResult HttpResponse { get; set; } = new OkResult();
 }
