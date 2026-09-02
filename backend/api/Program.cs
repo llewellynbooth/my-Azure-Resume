@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Company.Function;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
