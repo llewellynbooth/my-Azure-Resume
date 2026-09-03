@@ -82,27 +82,6 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
 }
 
-/* ---- lazy-load Credly badges ------------------------------- */
-const certGrid = document.querySelector('[data-lazy-credly]');
-if (certGrid) {
-  const loadCredly = () => {
-    if (document.getElementById('credly-embed')) return;
-    const s = document.createElement('script');
-    s.id = 'credly-embed';
-    s.async = true;
-    s.src = 'https://cdn.credly.com/assets/utilities/embed.js';
-    document.body.appendChild(s);
-  };
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries, obs) => {
-      if (entries.some(e => e.isIntersecting)) { loadCredly(); obs.disconnect(); }
-    }, { rootMargin: '200px' });
-    io.observe(certGrid);
-  } else {
-    loadCredly();
-  }
-}
-
 /* ---- contact form ----------------------------------------- */
 const form = document.getElementById('contact-form');
 form?.addEventListener('submit', async (e) => {

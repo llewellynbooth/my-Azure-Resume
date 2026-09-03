@@ -16,11 +16,13 @@ framework, no build step.
   properties, fluid `clamp()` type, grid/flex, light + dark with a toggle that
   persists, `prefers-reduced-motion` honoured) + rewritten `js/main.js`.
 - Social and UI icons are inline SVG — no icon-font dependency.
-- **Credly badges lazy-load** via `IntersectionObserver` when the section scrolls
-  near view, instead of loading `embed.js` + 12 iframes on first paint.
+- **Certifications** now a single static image (`images/certifications.png`) instead
+  of 12 live Credly embeds — Microsoft ended the Credly partnership, so the badges
+  were rendering as expired.
 - **Contact form wired to `POST /api/contact`** (with the honeypot field) — the
   backend endpoint finally has a UI.
-- Scroll-spy nav (`aria-current`), mobile nav, inline theme bootstrap to avoid a
+- Alternating section backgrounds and a soft accent-tinted hero for depth;
+  scroll-spy nav (`aria-current`), mobile nav, inline theme bootstrap to avoid a
   flash, `sitemap.xml` / `site.webmanifest` filled in.
 
 ## September 2026 — backend hardening
