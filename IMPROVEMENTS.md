@@ -2,6 +2,16 @@
 
 A record of significant changes to this project and why they were made. Newest first.
 
+## September 2026 — engineering docs
+
+- Added [`docs/adr/`](docs/adr/) — eight Architecture Decision Records covering the
+  isolated-worker migration, `CosmosClient` vs bindings, OIDC, the deferred Front
+  Door migration, the unreconciled Terraform, the atomic counter, the no-framework
+  frontend, and the static certifications grid.
+- Added [`docs/runbook.md`](docs/runbook.md) — resource inventory, deploy flow,
+  the failure modes hit while building this (empty 200s, OIDC "no subscriptions",
+  in-process/isolated runtime mismatch), rollback, and Cosmos key rotation.
+
 ## September 2026 — frontend rebuild
 
 Replaced the 2013 résumé template with a hand-authored modern static page. No

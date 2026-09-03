@@ -144,6 +144,14 @@ Cosmos key rotated; Bicep retired.
 
 Detailed change history is in [`IMPROVEMENTS.md`](IMPROVEMENTS.md).
 
+## Engineering docs
+
+- [`docs/adr/`](docs/adr/) — Architecture Decision Records: why isolated worker, why
+  `CosmosClient` over bindings, why OIDC, why Front Door is deferred, why Terraform
+  isn't reconciled yet, and more.
+- [`docs/runbook.md`](docs/runbook.md) — what's where, how deploys work, common
+  failure modes and fixes, rollback, key rotation.
+
 ## Credits
 
 - [Cloud Resume Challenge](https://cloudresumechallenge.dev/) — Forrest Brazeal
