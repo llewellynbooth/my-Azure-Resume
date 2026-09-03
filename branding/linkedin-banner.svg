@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1584" height="396" viewBox="0 0 1584 396"
-     role="img" aria-label="Llewellyn Booth — Senior Cloud &amp; Hybrid Infrastructure Engineer">
+     role="img" aria-label="Llewellyn Booth — Cloud &amp; Hybrid Infrastructure Engineer">
   <!--
     LinkedIn banner, 1584x396. Matches the site: dark ground, Azure-blue accent, Inter.
     To use: open this file in Chrome, screenshot at 1584x396 (or an SVG->PNG converter),
@@ -51,7 +51,7 @@
   <!-- text block (right of the profile-photo overlap) -->
   <text class="name" x="610" y="176">Llewellyn Booth</text>
   <rect x="612" y="194" width="46" height="3" rx="1.5" fill="#4cc2ff"/>
-  <text class="role" x="610" y="230">Senior Cloud &amp; Hybrid Infrastructure Engineer</text>
+  <text class="role" x="610" y="230">Cloud &amp; Hybrid Infrastructure Engineer</text>
   <text class="tag"  x="612" y="262">Microsoft Azure  ·  Azure Local / HCI  ·  Automation  ·  Perth, remote</text>
   <text class="url"  x="612" y="292">llewellynbooth.com</text>
 </svg>
