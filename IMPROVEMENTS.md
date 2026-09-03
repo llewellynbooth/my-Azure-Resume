@@ -16,9 +16,10 @@ framework, no build step.
   properties, fluid `clamp()` type, grid/flex, light + dark with a toggle that
   persists, `prefers-reduced-motion` honoured) + rewritten `js/main.js`.
 - Social and UI icons are inline SVG — no icon-font dependency.
-- **Certifications** now a single static image (`images/certifications.png`) instead
+- **Certifications** are now a responsive card grid (name / issuer / level) instead
   of 12 live Credly embeds — Microsoft ended the Credly partnership, so the badges
-  were rendering as expired.
+  were rendering as expired. Names pulled from the original Credly badge links; a
+  "Verify on Credly" link remains.
 - **Contact form wired to `POST /api/contact`** (with the honeypot field) — the
   backend endpoint finally has a UI.
 - Alternating section backgrounds and a soft accent-tinted hero for depth;
