@@ -38,6 +38,15 @@ themeToggle?.addEventListener('click', () => {
 const yr = document.getElementById('year');
 if (yr) yr.textContent = String(new Date().getFullYear());
 
+/* ---- expand all <details> when printing -------------------------- */
+const allDetails = () => document.querySelectorAll('.timeline details');
+let reopen = [];
+window.addEventListener('beforeprint', () => {
+  reopen = [];
+  allDetails().forEach(d => { if (!d.open) { d.open = true; reopen.push(d); } });
+});
+window.addEventListener('afterprint', () => { reopen.forEach(d => d.open = false); });
+
 /* ---- mobile nav ------------------------------------------------- */
 const navToggle = document.querySelector('.nav-toggle');
 const nav = document.getElementById('nav');
