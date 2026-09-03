@@ -1,0 +1,64 @@
+name: synthetic
+
+# Black-box probe of the live site + API. A failed run notifies the repo owner
+# and (below) opens a tracking issue. Not a replacement for real APM.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  API: https://resumefunctionapp-win-cqczeqc6d5gtdfbb.australiaeast-01.azurewebsites.net/api
+  SITE: https://resumestore100.z8.web.core.windows.net/
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Static site responds
+        run: |
+          code=$(curl -fsS --max-time 15 -o /dev/null -w '%{http_code}' "$SITE")
+          echo "site: $code"
+
+      - name: API health
+        run: |
+          body=$(curl -fsS --max-time 15 "$API/health")
+          echo "$body"
+          echo "$body" | grep -q '"database":"connected"' \
+            || { echo "::error::health check not 'connected'"; exit 1; }
+
+      - name: Counter reads (GET, non-mutating)
+        run: |
+          body=$(curl -fsS --max-time 15 "$API/getResumeFunction")
+          echo "$body"
+          echo "$body" | grep -q '"count"' \
+            || { echo "::error::counter response malformed"; exit 1; }
+
+      - name: Open an issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = 'Synthetic probe failing';
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'synthetic'
+            });
+            const body = `Run ${context.runId} failed at ${new Date().toISOString()}.\n` +
+                         `See: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            if (issues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['synthetic']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issues[0].number, body
+              });
+            }

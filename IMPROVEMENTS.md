@@ -2,15 +2,21 @@
 
 A record of significant changes to this project and why they were made. Newest first.
 
-## September 2026 — engineering docs
+## September 2026 — docs, security posture, CI gates
 
-- Added [`docs/adr/`](docs/adr/) — eight Architecture Decision Records covering the
+- Added [`docs/adr/`](docs/adr/) — nine Architecture Decision Records covering the
   isolated-worker migration, `CosmosClient` vs bindings, OIDC, the deferred Front
   Door migration, the unreconciled Terraform, the atomic counter, the no-framework
-  frontend, and the static certifications grid.
+  frontend, the static certifications grid, and the CI gates below.
 - Added [`docs/runbook.md`](docs/runbook.md) — resource inventory, deploy flow,
   the failure modes hit while building this (empty 200s, OIDC "no subscriptions",
   in-process/isolated runtime mismatch), rollback, and Cosmos key rotation.
+- Added [`SECURITY.md`](SECURITY.md) (private disclosure policy) and
+  [`docs/threat-model.md`](docs/threat-model.md) (assets, entry points,
+  threats/mitigations, accepted risks).
+- **CI gates:** CodeQL (C# + JS, push/PR/weekly), Lighthouse CI on frontend PRs
+  (accessibility & SEO ≥ 95 blocking), and a 15-minute synthetic probe of the live
+  site + API that opens an issue on failure. Plus an SLO in the README.
 
 ## September 2026 — frontend rebuild
 

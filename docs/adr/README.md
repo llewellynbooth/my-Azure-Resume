@@ -14,3 +14,4 @@ Michael Nygard's ADR template.
 | [0006](0006-atomic-counter.md) | Visitor counter increments atomically via `PatchItemAsync` | Accepted |
 | [0007](0007-frontend-no-framework.md) | Frontend is hand-authored — no framework, no build step | Accepted |
 | [0008](0008-certifications-static-grid.md) | Certifications shown as a static grid, not Credly embeds | Accepted |
+| [0009](0009-ci-quality-security-gates.md) | CI quality & security gates (CodeQL, Lighthouse, synthetic probe) | Accepted |
