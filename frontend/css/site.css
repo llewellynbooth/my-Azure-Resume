@@ -243,6 +243,7 @@ section { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
 }
 .cert-figure img {
   width: 100%; display: block; min-height: 160px; background: var(--surface);
+  color: transparent; /* hide alt text / broken-image glyph until the file is added */
 }
 .cert-figure figcaption {
   padding: .8rem 1.1rem; color: var(--text-muted); font-size: .88rem;
