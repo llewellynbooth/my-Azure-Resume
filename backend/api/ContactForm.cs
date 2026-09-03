@@ -15,12 +15,14 @@ public class ContactForm
 
     private readonly MessageStore _store;
     private readonly IMemoryCache _cache;
+    private readonly TurnstileVerifier _turnstile;
     private readonly ILogger<ContactForm> _logger;
 
-    public ContactForm(MessageStore store, IMemoryCache cache, ILogger<ContactForm> logger)
+    public ContactForm(MessageStore store, IMemoryCache cache, TurnstileVerifier turnstile, ILogger<ContactForm> logger)
     {
         _store = store;
         _cache = cache;
+        _turnstile = turnstile;
         _logger = logger;
     }
 
@@ -56,6 +58,12 @@ public class ContactForm
         {
             _logger.LogWarning("Contact form honeypot triggered from {Ip}", ip);
             return new OkObjectResult(new { success = true, message = "Thanks — your message has been received." });
+        }
+
+        if (!await _turnstile.VerifyAsync(data?.TurnstileToken, ip, ct))
+        {
+            _logger.LogWarning("Turnstile verification failed for {Ip}", ip);
+            return new BadRequestObjectResult(new { error = "Bot check failed — please reload the page and try again." });
         }
 
         if (result.Outcome == ContactOutcome.Invalid)
