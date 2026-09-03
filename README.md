@@ -111,7 +111,22 @@ The running estate (Storage static site, CDN/Front Door, two Function Apps, Cosm
 and is **managed manually in the portal**. `infrastructure/main.tf` is a Terraform description
 of the intended shape but has **not been imported or applied** — resource names differ and
 there is no state backend yet. Reconciling it is a tracked task; see
-[`infrastructure/README.md`](infrastructure/README.md).
+[`infrastructure/README.md`](infrastructure/README.md) and
+[`docs/adr/0005`](docs/adr/0005-terraform-not-reconciled.md).
+
+## Reliability
+
+Target: **99.9% availability**, API **p95 < 300 ms**. A synthetic probe
+(`.github/workflows/synthetic.yml`) checks the site, `/api/health` and the counter
+every 15 minutes and opens an issue on failure. Health: `GET /api/health`.
+
+## Quality & security gates
+
+- **CodeQL** on every push and PR (C# + JS), plus weekly.
+- **Lighthouse CI** on frontend PRs — accessibility and SEO must stay ≥ 95.
+- **Dependabot** (NuGet + Actions) weekly.
+- CI authenticates to Azure with **OIDC** — no stored credentials.
+- [`SECURITY.md`](SECURITY.md) · [`docs/threat-model.md`](docs/threat-model.md)
 
 ## Cost
 
@@ -143,6 +158,14 @@ Cosmos key rotated; Bicep retired.
   managed TLS**.
 
 Detailed change history is in [`IMPROVEMENTS.md`](IMPROVEMENTS.md).
+
+## Engineering docs
+
+- [`docs/adr/`](docs/adr/) — Architecture Decision Records: why isolated worker, why
+  `CosmosClient` over bindings, why OIDC, why Front Door is deferred, why Terraform
+  isn't reconciled yet, and more.
+- [`docs/runbook.md`](docs/runbook.md) — what's where, how deploys work, common
+  failure modes and fixes, rollback, key rotation.
 
 ## Credits
 
