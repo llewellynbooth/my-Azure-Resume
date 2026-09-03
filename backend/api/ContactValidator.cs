@@ -12,6 +12,7 @@ public class ContactRequest
     public string? Subject { get; set; }
     public string? Message { get; set; }
     public string? Website { get; set; } // honeypot — real users leave this empty
+    public string? TurnstileToken { get; set; } // Cloudflare Turnstile response token
 }
 
 /// <summary>The document stored in the Messages container.</summary>

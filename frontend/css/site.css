@@ -297,6 +297,7 @@ section { padding-block: clamp(3.5rem, 9vw, 6.5rem); }
 .form-row input:focus, .form-row textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
 .form-row textarea { min-height: 7rem; resize: vertical; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.cf-turnstile { margin: .25rem 0 1rem; }
 .form-status { font-size: .92rem; margin: .5rem 0 0; min-height: 1.4em; }
 .form-status.ok { color: #1a7f37; }
 .form-status.err { color: #cf222e; }

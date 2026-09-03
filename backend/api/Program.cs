@@ -27,6 +27,7 @@ var host = new HostBuilder()
         services.AddSingleton<CounterStore>();
         services.AddSingleton<MessageStore>();
         services.AddSingleton<ContactNotifier>();
+        services.AddHttpClient<TurnstileVerifier>();
         services.AddMemoryCache(); // best-effort per-instance rate limiting for /api/contact
 
         services.AddApplicationInsightsTelemetryWorkerService();

@@ -112,7 +112,8 @@ form?.addEventListener('submit', async (e) => {
         email: fd.get('email'),
         subject: fd.get('subject'),
         message: fd.get('message'),
-        website: fd.get('website') // honeypot
+        website: fd.get('website'), // honeypot
+        turnstileToken: fd.get('cf-turnstile-response') // Cloudflare Turnstile
       })
     });
     const data = await res.json().catch(() => ({}));
@@ -120,6 +121,7 @@ form?.addEventListener('submit', async (e) => {
       status.className = 'form-status ok';
       status.textContent = data.message || 'Thanks — your message has been sent.';
       form.reset();
+      if (window.turnstile) window.turnstile.reset(); // fresh token for the next send
     } else {
       status.className = 'form-status err';
       status.textContent = data.error || `Something went wrong (${res.status}).`;

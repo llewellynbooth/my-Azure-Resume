@@ -31,6 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="css/site.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <script>
     // Apply a stored theme choice before paint to avoid a flash.
@@ -485,6 +486,7 @@
               <label for="cf-website">Leave this field empty</label>
               <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off">
             </div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAEl5OvOGNslvpxza" data-theme="auto" data-size="flexible"></div>
             <button class="btn btn--primary" type="submit" id="cf-submit">Send message</button>
             <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
           </form>

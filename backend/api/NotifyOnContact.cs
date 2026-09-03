@@ -48,6 +48,12 @@ public class NotifyOnContact
 /// </summary>
 public class ContactNotifier
 {
+    // Flood guard: cap notification emails so a spike can't bury your inbox.
+    // Per-instance; the messages themselves are always in Cosmos regardless.
+    private const int MaxEmailsPerHour = 15;
+    private static readonly object _gate = new();
+    private static readonly Queue<DateTime> _recent = new();
+
     private readonly EmailClient? _client;
     private readonly string? _sender;     // e.g. donotreply@<guid>.azurecomm.net
     private readonly string? _recipient;  // where you want to be notified
@@ -80,6 +86,14 @@ public class ContactNotifier
             return;
         }
 
+        if (!WithinHourlyCap())
+        {
+            _logger.LogWarning(
+                "Hourly notification cap ({Cap}) reached — email skipped for {Id}. The message is in the Messages container.",
+                MaxEmailsPerHour, m.Id);
+            return;
+        }
+
         // Stored fields are HTML-encoded; decode for a readable plain-text email.
         var name = WebUtility.HtmlDecode(m.Name);
         var email = WebUtility.HtmlDecode(m.Email);
@@ -109,6 +123,22 @@ public class ContactNotifier
             // later messages. The submission is always persisted in Cosmos; failures surface
             // in Application Insights (set an alert on NotifyOnContact exceptions).
             _logger.LogError(ex, "Failed to send contact notification for {Id}.", m.Id);
+        }
+    }
+
+    private static bool WithinHourlyCap()
+    {
+        lock (_gate)
+        {
+            var cutoff = DateTime.UtcNow.AddHours(-1);
+            while (_recent.Count > 0 && _recent.Peek() < cutoff)
+                _recent.Dequeue();
+
+            if (_recent.Count >= MaxEmailsPerHour)
+                return false;
+
+            _recent.Enqueue(DateTime.UtcNow);
+            return true;
         }
     }
 }
