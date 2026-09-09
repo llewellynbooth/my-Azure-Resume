@@ -25,7 +25,7 @@
          binds Microsoft.ApplicationInsights 2.x (ITelemetryInitializer lives there);
          WorkerService 3.x pulls AI SDK 3.x, which drops that type and crashes the
          isolated worker at startup with a TypeLoadException. -->
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.23.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="3.1.2" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights" Version="2.51.0" />
   </ItemGroup>
 
