@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.CosmosDB" Version="4.16.1" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.62.1" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.63.0" />
     <PackageReference Include="Azure.Communication.Email" Version="1.1.0" />
     <!-- Cosmos SDK 3.x requires Newtonsoft.Json referenced explicitly even when the
          System.Text.Json serializer is used. -->
